@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnovateHub - Student Social Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-gradient: linear-gradient(135deg, #434343 0%, #000000 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-md: 0 8px 30px rgba(0,0,0,0.12);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Modern Glassmorphism Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #1a202c !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 12px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .nav-link:hover::before {
+            left: 0;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        /* Modern Buttons */
+        .btn-gradient {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: white;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .btn-gradient:hover::before {
+            left: 100%;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Modern Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--secondary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Dashboard */
+        .dashboard-container {
+            background: white;
+            min-height: 100vh;
+            border-radius: 24px 24px 0 0;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .post-card, .note-card, .group-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e2e8f0;
+            transition: var(--transition);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .post-card::before, .note-card::before, .group-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .post-card:hover, .note-card:hover, .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .post-card:hover::before, .note-card:hover::before, .group-card:hover::before {
+            opacity: 1;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .post-type-badge {
+            background: var(--success-gradient);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .post-type-badge.notes {
+            background: var(--secondary-gradient);
+        }
+
+        .post-type-badge.book {
+            background: var(--success-gradient);
+        }
+
+        .post-type-badge.personal {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        .post-type-badge.question {
+            background: linear-gradient(135deg, #6a85b6 0%, #bac8e0 100%);
+        }
+
+        /* Sidebar */
+        .sidebar-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Form Elements */
+        .form-control {
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            padding: 12px 16px;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .form-select {
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            padding: 12px 16px;
+            font-weight: 500;
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            background: transparent;
+            border: none;
+            color: #718096;
+            font-size: 1.1rem;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-action:hover {
+            background: #f7fafc;
+            color: #667eea;
+            transform: scale(1.1);
+        }
+
+        .btn-action.liked {
+            color: #f56565;
+        }
+
+        /* Search Bar */
+        .search-wrapper {
+            position: relative;
+            max-width: 300px;
+        }
+
+        .search-wrapper input {
+            padding-left: 45px;
+            border-radius: 25px;
+            border: 2px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .search-wrapper .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #718096;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast {
+            border-radius: 12px;
+            border: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .toast.success {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .toast.error {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+
+        .toast.info {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: white;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .dashboard-container {
+                margin-top: 1rem;
+                border-radius: 16px 16px 0 0;
+            }
+            
+            .glass-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: var(--dark-gradient);
+            }
+            .navbar {
+                background: rgba(26, 32, 44, 0.95);
+                border: 1px solid rgba(45, 55, 72, 0.2);
+            }
+            .navbar-brand {
+                background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .nav-link {
+                color: #e2e8f0 !important;
+            }
+            .nav-link:hover {
+                color: white !important;
+            }
+            .nav-link::before {
+                background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            }
+            .dashboard-container {
+                background: #1a202c;
+                color: white;
+            }
+            .post-card, .sidebar-card, .note-card, .group-card {
+                background: #2d3748;
+                color: white;
+                border-color: #4a5568;
+            }
+            .glass-card {
+                background: rgba(0, 0, 0, 0.3);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .hero-subtitle {
+                color: rgba(255, 255, 255, 0.7);
+            }
+            .user-avatar {
+                background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            }
+            .form-control, .form-select {
+                background-color: #4a5568;
+                border-color: #6a768e;
+                color: white;
+            }
+            .form-control::placeholder {
+                color: #cbd5e0;
+            }
+            .form-control:focus {
+                border-color: #a1c4fd;
+                box-shadow: 0 0 0 0.2rem rgba(161, 196, 253, 0.25);
+            }
+            .stat-item {
+                background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            }
+            .text-dark {
+                color: #e2e8f0 !important;
+            }
+            .search-wrapper input {
+                background: rgba(45, 55, 72, 0.9);
+                color: white;
+            }
+            .search-wrapper .search-icon {
+                color: #cbd5e0;
+            }
+            .modal-content {
+                background: #1a202c;
+                color: white;
+            }
+            .modal-header {
+                background: var(--dark-gradient) !important;
+            }
+            .btn-close-white {
+                filter: invert(1);
+            }
+            .badge.bg-light {
+                background: #4a5568 !important;
+                color: #a1c4fd !important;
+            }
+            .badge.bg-info {
+                background: #4a5568 !important;
+                color: #a1c4fd !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Modern Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="showSection('home')"><i class="fas fa-graduation-cap me-2"></i>InnovateHub</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('home')"><i class="fas fa-home me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('notes')"><i class="fas fa-sticky-note me-1"></i>My Notes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('deadlines')"><i class="fas fa-calendar-alt me-1"></i>Deadlines</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('groups')"><i class="fas fa-users me-1"></i>Study Groups</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <div class="search-wrapper">
+                        <input type="text" class="form-control" placeholder="Search..." id="searchInput">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    
+                    <div id="userActions">
+                        <button class="btn-gradient pulse-glow" onclick="showLoginModal()">Join Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div id="heroSection" class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Connect. Learn. Grow.</h1>
+            <p class="hero-subtitle">Join the ultimate student community where knowledge flows freely and connections last forever.</p>
+            <button class="btn-gradient btn-lg pulse-glow" onclick="showLoginModal()">
+                <i class="fas fa-rocket me-2"></i>Get Started
+            </button>
+        </div>
+        
+        <div class="container mt-5">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="glass-card text-center text-white fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h4 class="mb-3">Share Resources</h4>
+                        <p>Exchange books, notes, and study materials with your peers seamlessly.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card text-center text-white fade-in" style="animation-delay: 0.2s;">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4 class="mb-3">Build Community</h4>
+                        <p>Connect with like-minded students and form lasting study partnerships.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card text-center text-white fade-in" style="animation-delay: 0.4s;">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4 class="mb-3">Track Progress</h4>
+                        <p>Monitor your academic journey and celebrate achievements together.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard/Main Content Container -->
+    <div id="mainContentContainer" class="dashboard-container" style="display: none;">
+        <div class="container py-4">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-lg-3">
+                    <div class="sidebar-card text-center">
+                        <div class="user-avatar mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.5rem;" id="userAvatar"></div>
+                        <h5 class="mb-1" id="userName"></h5>
+                        <p class="text-muted mb-3" id="userCourse"></p>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number" id="userPosts">0</div>
+                                <div class="text-muted small">Posts</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="userFollowers">0</div>
+                                <div class="text-muted small">Followers</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-card">
+                        <h6 class="mb-3"><i class="fas fa-fire me-2 text-danger"></i>Trending</h6>
+                        <div id="trendingTopics">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dynamic Main Content Area -->
+                <div class="col-lg-6" id="dynamicMainContent">
+                    <!-- Default to Posts/Feed -->
+                    <div id="postsSection">
+                        <!-- Create Post -->
+                        <div class="post-card mb-4">
+                            <div class="p-4">
+                                <h5 class="mb-3"><i class="fas fa-plus-circle me-2"></i>Share Something</h5>
+                                <form id="createPostForm">
+                                    <div class="mb-3">
+                                        <select class="form-select" id="postType" required>
+                                            <option value="">What are you sharing?</option>
+                                            <option value="book">📚 Book/Resource</option>
+                                            <option value="notes">📝 Study Notes</option>
+                                            <option value="personal">💭 Personal Note</option>
+                                            <option value="question">❓ Question</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="postTitle" placeholder="Give it a catchy title..." required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <textarea class="form-control" id="postContent" rows="3" placeholder="Share your thoughts..." required></textarea>
+                                    </div>
+                                    <!-- New: File Upload Field -->
+                                    <div class="mb-3">
+                                        <label for="postFile" class="form-label d-flex align-items-center gap-2">
+                                            <i class="fas fa-paperclip"></i> Attach File (Image, PDF, etc.)
+                                        </label>
+                                        <input type="file" class="form-control" id="postFile" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex gap-2">
+                                            <!-- These buttons are now mostly illustrative as the single file input handles both -->
+                                            <button type="button" class="btn-action" title="Add Image" onclick="document.getElementById('postFile').click()">
+                                                <i class="fas fa-image"></i>
+                                            </button>
+                                            <button type="button" class="btn-action" title="Add File" onclick="document.getElementById('postFile').click()">
+                                                <i class="fas fa-paperclip"></i>
+                                            </button>
+                                        </div>
+                                        <button type="submit" class="btn-gradient">
+                                            <i class="fas fa-paper-plane me-2"></i>Share
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Posts Container -->
+                        <div id="postsContainer">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+
+                    <!-- My Notes Section (Initially hidden) -->
+                    <div id="notesSection" style="display: none;">
+                        <h4 class="mb-4 d-flex justify-content-between align-items-center">
+                            <i class="fas fa-sticky-note me-2"></i>My Private Notes
+                            <button class="btn btn-gradient btn-sm" onclick="showCreateNoteModal()">
+                                <i class="fas fa-plus me-1"></i>New Note
+                            </button>
+                        </h4>
+                        <div id="myNotesContainer">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+
+                    <!-- Deadlines Section (Initially hidden) -->
+                    <div id="deadlinesSection" style="display: none;">
+                        <h4 class="mb-4 d-flex justify-content-between align-items-center">
+                            <i class="fas fa-calendar-alt me-2"></i>Upcoming Deadlines
+                            <button class="btn btn-gradient btn-sm" onclick="showCreateDeadlineModal()">
+                                <i class="fas fa-plus me-1"></i>Add Deadline
+                            </button>
+                        </h4>
+                        <div id="allDeadlinesContainer">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+
+                    <!-- Study Groups Section (Initially hidden) -->
+                    <div id="groupsSection" style="display: none;">
+                        <h4 class="mb-4 d-flex justify-content-between align-items-center">
+                            <i class="fas fa-users me-2"></i>Study Groups
+                            <button class="btn btn-gradient btn-sm" onclick="showCreateGroupModal()">
+                                <i class="fas fa-plus me-1"></i>Create Group
+                            </button>
+                        </h4>
+                        <div class="d-flex gap-3 mb-3">
+                            <button class="btn btn-outline-primary active" id="btnAllGroups" onclick="fetchStudyGroups()">All Groups</button>
+                            <button class="btn btn-outline-primary" id="btnMyGroups" onclick="fetchStudyGroups(true)">My Groups</button>
+                        </div>
+                        <div id="studyGroupsContainer">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- Right Sidebar (unchanged for now) -->
+                <div class="col-lg-3">
+                    <div class="sidebar-card">
+                        <h6 class="mb-3"><i class="fas fa-calendar text-primary me-2"></i>Deadlines (from sidebar)</h6>
+                        <div id="deadlinesList">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-card">
+                        <h6 class="mb-3"><i class="fas fa-user-friends text-primary me-2"></i>Study Groups (from sidebar)</h6>
+                        <div id="studyGroupsList">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
+                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+                    <h5 class="modal-title"><i class="fas fa-graduation-cap me-2"></i>Join InnovateHub</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <input type="email" class="form-control" id="loginEmail" placeholder="Student Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+                        </div>
+                        <div class="mb-3">
+                            <select class="form-select" id="loginCollege" required>
+                                <option value="">Select your college</option>
+                                <option value="bvb">BVB College of Engineering</option>
+                                <option value="kit">KLE Institute of Technology</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-gradient w-100 mb-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </button>
+                    </form>
+                    <div class="text-center">
+                        <p class="mb-0">New here? <a href="#" class="text-decoration-none fw-bold" style="color: #667eea;" onclick="showSignupModal()">Create Account</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
+                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+                    <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Create Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="signupForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="signupName" placeholder="Full Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" id="signupEmail" placeholder="Student Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" id="signupPassword" placeholder="Password" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="signupCourse" placeholder="Course/Department" required>
+                        </div>
+                        <div class="mb-3">
+                            <select class="form-select" id="signupCollege" required>
+                                <option value="">Select your college</option>
+                                <option value="bvb">BVB College of Engineering</option>
+                                <option value="kit">KLE Institute of Technology</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-gradient w-100 mb-3">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </button>
+                    </form>
+                    <div class="text-center">
+                        <p class="mb-0">Already have an account? <a href="#" class="text-decoration-none fw-bold" style="color: #667eea;" onclick="showLoginModal()">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Note Modal -->
+    <div class="modal fade" id="createNoteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
+                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+                    <h5 class="modal-title"><i class="fas fa-sticky-note me-2"></i>Create New Note</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="createNoteForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="noteTitle" placeholder="Note Title" required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="noteContent" rows="5" placeholder="Your note content..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="noteTags" placeholder="Tags (comma-separated, e.g., 'DSA, Study, Exam')">
+                        </div>
+                        <button type="submit" class="btn-gradient w-100 mb-3">
+                            <i class="fas fa-save me-2"></i>Save Note
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Deadline Modal -->
+    <div class="modal fade" id="createDeadlineModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
+                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+                    <h5 class="modal-title"><i class="fas fa-calendar-plus me-2"></i>Add New Deadline</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="createDeadlineForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="deadlineTitle" placeholder="Deadline Title" required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="deadlineDescription" rows="3" placeholder="Description (optional)"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deadlineDueDate" class="form-label visually-hidden">Due Date</label>
+                            <input type="date" class="form-control" id="deadlineDueDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <select class="form-select" id="deadlineType" required>
+                                <option value="">Select Type</option>
+                                <option value="assignment">Assignment</option>
+                                <option value="exam">Exam</option>
+                                <option value="project">Project</option>
+                                <option value="event">Event</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="deadlineIsPublic">
+                            <label class="form-check-label" for="deadlineIsPublic">
+                                Make Public to College
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-gradient w-100 mb-3">
+                            <i class="fas fa-plus-circle me-2"></i>Add Deadline
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div class="modal fade" id="createGroupModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
+                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+                    <h5 class="modal-title"><i class="fas fa-users-medical me-2"></i>Create New Study Group</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="createGroupForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="groupName" placeholder="Group Name (e.g., 'DSA Study Squad')" required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="groupDescription" rows="3" placeholder="Group Description (optional)"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="groupTags" placeholder="Tags (comma-separated, e.g., 'Algorithms, C++, CS')">
+                        </div>
+                        <button type="submit" class="btn-gradient w-100 mb-3">
+                            <i class="fas fa-users-cog me-2"></i>Create Group
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // API Configuration - Make sure this matches your backend URL
+        const API_BASE_URL = 'http://localhost:3000/api';
+        
+        // Global State
+        let currentUser = null;
+        let posts = [];
+        let notes = []; // Array to store user's notes
+        let deadlines = []; // Array to store user's deadlines
+        let studyGroups = []; // Array to store study groups
+        let authToken = null;
+
+        // API Helper Functions
+        async function apiCall(endpoint, options = {}) {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                ...options
+            };
+
+            if (authToken) {
+                config.headers.Authorization = `Bearer ${authToken}`;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || response.statusText || 'API call failed');
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('API Error:', endpoint, error);
+                showToast(error.message || 'Network error occurred', 'error');
+                throw error;
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event Listeners for Forms
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('signupForm').addEventListener('submit', handleSignup);
+            document.getElementById('createPostForm').addEventListener('submit', handleCreatePost);
+            document.getElementById('createNoteForm').addEventListener('submit', handleCreateNote);
+            document.getElementById('createDeadlineForm').addEventListener('submit', handleCreateDeadline);
+            document.getElementById('createGroupForm').addEventListener('submit', handleCreateGroup);
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            
+            // Check for saved auth token
+            const savedToken = window.localStorage?.getItem('authToken');
+            if (savedToken) {
+                authToken = savedToken;
+                loadUserProfile(); // Attempt to load user profile if token exists
+            } else {
+                showHeroSection(); // Show hero section if no token
+            }
+        });
+
+        // Authentication Functions
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const college = document.getElementById('loginCollege').value;
+
+            try {
+                const response = await apiCall('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password, college })
+                });
+
+                authToken = response.token;
+                currentUser = response.user;
+                
+                if (window.localStorage) {
+                    window.localStorage.setItem('authToken', authToken);
+                }
+
+                bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+                showSection('home'); // Show default section (posts) after login
+                updateUserActions();
+                showToast('Welcome back! 🎉', 'success');
+            } catch (error) {
+                showToast('Login failed: ' + error.message, 'error');
+            }
+        }
+
+        async function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const course = document.getElementById('signupCourse').value;
+            const college = document.getElementById('signupCollege').value;
+
+            try {
+                const response = await apiCall('/auth/signup', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, email, password, course, college })
+                });
+
+                bootstrap.Modal.getInstance(document.getElementById('signupModal')).hide();
+                showToast('Account created successfully! Please login.', 'success');
+                showLoginModal();
+            } catch (error) {
+                showToast('Signup failed: ' + error.message, 'error');
+            }
+        }
+
+        async function loadUserProfile() {
+            try {
+                const response = await apiCall('/auth/me');
+                currentUser = response.user;
+                showSection('home'); // Automatically show home/posts section after loading profile
+                updateUserActions();
+                updateSidebarProfile();
+                // Load all dynamic data (these will also be called when their respective sections are navigated to)
+                fetchPosts();
+                fetchDeadlines(); // Load for sidebar (main deadlines section calls fetchDeadlines(true))
+                fetchStudyGroups(); // Load for sidebar (main groups section calls fetchStudyGroups())
+                fetchTrendingTopics(); // Still mock data, but keep loading
+            } catch (error) {
+                console.error('Failed to load user profile:', error);
+                handleLogout(); // Clear invalid token and show hero section
+                showToast('Session expired or invalid. Please log in again.', 'info');
+            }
+        }
+
+        function handleLogout() {
+            authToken = null;
+            currentUser = null;
+            window.localStorage?.removeItem('authToken');
+            showHeroSection();
+            updateUserActions();
+            showToast('Logged out successfully.', 'success');
+        }
+
+        // UI Functions - Section Management
+        function showSection(sectionId) {
+            // Hide all main content sections
+            document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('mainContentContainer').style.display = 'none';
+            document.getElementById('postsSection').style.display = 'none';
+            document.getElementById('notesSection').style.display = 'none';
+            document.getElementById('deadlinesSection').style.display = 'none';
+            document.getElementById('groupsSection').style.display = 'none';
+
+            // Show appropriate section based on ID
+            if (sectionId === 'home') {
+                if (currentUser) {
+                    document.getElementById('mainContentContainer').style.display = 'block';
+                    document.getElementById('postsSection').style.display = 'block';
+                    document.querySelector('.navbar').classList.add('scrolled');
+                    fetchPosts(); // Refresh posts on home
+                } else {
+                    showHeroSection();
+                }
+            } else if (sectionId === 'notes') {
+                if (currentUser) {
+                    document.getElementById('mainContentContainer').style.display = 'block';
+                    document.getElementById('notesSection').style.display = 'block';
+                    document.querySelector('.navbar').classList.add('scrolled');
+                    fetchNotes(); // Fetch and display notes
+                } else {
+                    showToast('Please login to view your notes.', 'info');
+                    showLoginModal();
+                }
+            } else if (sectionId === 'deadlines') {
+                if (currentUser) {
+                    document.getElementById('mainContentContainer').style.display = 'block';
+                    document.getElementById('deadlinesSection').style.display = 'block';
+                    document.querySelector('.navbar').classList.add('scrolled');
+                    fetchDeadlines(true); // Fetch and display ALL deadlines for this section
+                } else {
+                    showToast('Please login to view deadlines.', 'info');
+                    showLoginModal();
+                }
+            } else if (sectionId === 'groups') {
+                if (currentUser) {
+                    document.getElementById('mainContentContainer').style.display = 'block';
+                    document.getElementById('groupsSection').style.display = 'block';
+                    document.querySelector('.navbar').classList.add('scrolled');
+                    fetchStudyGroups(); // Fetch and display study groups (default all)
+                    // Reset active button for groups
+                    document.getElementById('btnAllGroups').classList.add('active');
+                    document.getElementById('btnMyGroups').classList.remove('active');
+                } else {
+                    showToast('Please login to view study groups.', 'info');
+                    showLoginModal();
+                }
+            } else if (sectionId === 'books') { // Old 'books' section, now just a toast
+                 if (currentUser) {
+                    showToast('Books section is under construction! Check back soon.', 'info');
+                    // Optionally redirect to home or keep current section
+                    showSection('home');
+                } else {
+                    showToast('Please login to view resources.', 'info');
+                    showLoginModal();
+                }
+            }
+        }
+
+        function showHeroSection() {
+            document.getElementById('heroSection').style.display = 'block';
+            document.getElementById('mainContentContainer').style.display = 'none';
+            document.querySelector('.navbar').classList.remove('scrolled');
+        }
+
+        function updateUserActions() {
+            const userActionsDiv = document.getElementById('userActions');
+            if (currentUser) {
+                const userInitial = currentUser.name ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
+                userActionsDiv.innerHTML = `
+                    <div class="dropdown">
+                        <button class="btn btn-gradient dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            ${userInitial}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                `;
+                document.querySelector('.navbar-brand').style.pointerEvents = 'auto';
+            } else {
+                userActionsDiv.innerHTML = `
+                    <button class="btn-gradient pulse-glow" onclick="showLoginModal()">Join Now</button>
+                `;
+                document.querySelector('.navbar-brand').style.pointerEvents = 'none';
+            }
+        }
+
+        function updateSidebarProfile() {
+            if (currentUser) {
+                // Set the user avatar initial
+                document.getElementById('userAvatar').textContent = currentUser.name ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
+                // Set the user name
+                document.getElementById('userName').textContent = currentUser.name || 'InnovateHub User';
+                // Set the user course
+                document.getElementById('userCourse').textContent = currentUser.course || 'Student';
+                // Update post and followers count (these come from backend User model)
+                document.getElementById('userPosts').textContent = currentUser.postCount || 0;
+                document.getElementById('userFollowers').textContent = currentUser.followersCount || 0;
+            } else {
+                // Reset to defaults if no user logged in
+                document.getElementById('userAvatar').textContent = 'JD';
+                document.getElementById('userName').textContent = 'John Doe';
+                document.getElementById('userCourse').textContent = 'Computer Science';
+                document.getElementById('userPosts').textContent = '0';
+                document.getElementById('userFollowers').textContent = '0';
+            }
+        }
+
+        // Modal Instances
+        let loginModal, signupModal, createNoteModal, createDeadlineModal, createGroupModal;
+        document.addEventListener('DOMContentLoaded', () => {
+            loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            signupModal = new bootstrap.Modal(document.getElementById('signupModal'));
+            createNoteModal = new bootstrap.Modal(document.getElementById('createNoteModal'));
+            createDeadlineModal = new bootstrap.Modal(document.getElementById('createDeadlineModal'));
+            createGroupModal = new bootstrap.Modal(document.getElementById('createGroupModal'));
+        });
+
+        // Modal Show/Hide Helpers
+        function showLoginModal() { signupModal.hide(); loginModal.show(); }
+        function showSignupModal() { loginModal.hide(); signupModal.show(); }
+        function showCreateNoteModal() { createNoteModal.show(); }
+        function showCreateDeadlineModal() { createDeadlineModal.show(); }
+        function showCreateGroupModal() { createGroupModal.show(); }
+
+        // Toast Notifications
+        function showToast(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-primary border-0 ${type}`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+            toastContainer.appendChild(toast);
+            const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
+            bsToast.show();
+            toast.addEventListener('hidden.bs.toast', () => toast.remove());
+        }
+
+        // --- POST FUNCTIONS (Existing, refined with file upload) ---
+        async function handleCreatePost(e) {
+            e.preventDefault();
+            if (!currentUser) { showToast('Please login to create posts.', 'info'); showLoginModal(); return; }
+
+            const postType = document.getElementById('postType').value;
+            const postTitle = document.getElementById('postTitle').value;
+            const postContent = document.getElementById('postContent').value;
+            const postFile = document.getElementById('postFile').files[0]; // Get the selected file
+
+            if (!postType || !postTitle || !postContent) { showToast('Please fill all post fields.', 'error'); return; }
+
+            let fileBase64 = null;
+            let fileMimeType = null;
+            let fileOriginalName = null;
+            let fileType = null;
+
+            if (postFile) {
+                // Simple check for file size (e.g., 5MB limit for Base64, adjust as needed)
+                if (postFile.size > 5 * 1024 * 1024) { // 5 MB
+                    showToast('File size exceeds 5MB limit. Please upload a smaller file.', 'error');
+                    return;
+                }
+
+                // Read file as Base64
+                const reader = new FileReader();
+                reader.readAsDataURL(postFile);
+
+                reader.onload = async function() {
+                    fileBase64 = reader.result.split(',')[1]; // Get only the Base64 data part
+                    fileMimeType = postFile.type;
+                    fileOriginalName = postFile.name;
+                    fileType = postFile.type.startsWith('image/') ? 'image' : 'document'; // Categorize file type
+
+                    try {
+                        const newPostData = await apiCall('/posts', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                type: postType,
+                                title: postTitle,
+                                content: postContent,
+                                fileBase64: fileBase64,
+                                fileMimeType: fileMimeType,
+                                fileOriginalName: fileOriginalName,
+                                fileType: fileType
+                            })
+                        });
+                        posts.unshift(newPostData.post);
+                        renderPosts();
+                        document.getElementById('createPostForm').reset();
+                        document.getElementById('postFile').value = ''; // Clear file input
+                        showToast('Post created successfully! ✨', 'success');
+                        if (currentUser) {
+                            currentUser.postCount = (currentUser.postCount || 0) + 1;
+                            document.getElementById('userPosts').textContent = currentUser.postCount;
+                        }
+                    } catch (error) {
+                        showToast('Failed to create post: ' + error.message, 'error');
+                    }
+                };
+
+                reader.onerror = function(error) {
+                    console.error('Error reading file:', error);
+                    showToast('Failed to read file for upload.', 'error');
+                };
+            } else {
+                // If no file is attached, proceed without file data
+                try {
+                    const newPostData = await apiCall('/posts', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            type: postType,
+                            title: postTitle,
+                            content: postContent
+                        })
+                    });
+                    posts.unshift(newPostData.post);
+                    renderPosts();
+                    document.getElementById('createPostForm').reset();
+                    showToast('Post created successfully! ✨', 'success');
+                    if (currentUser) {
+                        currentUser.postCount = (currentUser.postCount || 0) + 1;
+                        document.getElementById('userPosts').textContent = currentUser.postCount;
+                    }
+                } catch (error) {
+                    showToast('Failed to create post: ' + error.message, 'error');
+                }
+            }
+        }
+
+        async function fetchPosts(query = '') {
+            const postsContainer = document.getElementById('postsContainer');
+            postsContainer.innerHTML = '<div class="loading-spinner"></div>';
+            try {
+                const data = await apiCall(`/posts${query ? `?search=${query}` : ''}`);
+                posts = data.posts;
+                renderPosts();
+            } catch (error) {
+                postsContainer.innerHTML = '<p class="text-center text-muted">Failed to load posts. Please try again later.</p>';
+            }
+        }
+
+        function renderPosts() {
+            const postsContainer = document.getElementById('postsContainer');
+            postsContainer.innerHTML = '';
+
+            if (posts.length === 0) {
+                postsContainer.innerHTML = '<p class="text-center text-muted">No posts found. Be the first to share!</p>';
+                return;
+            }
+
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post-card', 'mb-4', 'fade-in');
+                
+                let typeClass = '';
+                switch(post.type) {
+                    case 'book': typeClass = 'book'; break;
+                    case 'notes': typeClass = 'notes'; break;
+                    case 'personal': typeClass = 'personal'; break;
+                    case 'question': typeClass = 'question'; break;
+                    default: typeClass = 'personal';
+                }
+
+                const isLiked = currentUser && post.likedBy && post.likedBy.includes(currentUser._id);
+                const likeButtonClass = isLiked ? 'liked' : '';
+                const likeCount = post.likes !== undefined ? post.likes : (post.likedBy ? post.likedBy.length : 0);
+
+                let fileDisplayHtml = '';
+                if (post.fileBase64 && post.fileMimeType && post.fileOriginalName && post.fileType) {
+                    const dataUrl = `data:${post.fileMimeType};base64,${post.fileBase64}`;
+                    if (post.fileType === 'image') {
+                        fileDisplayHtml = `<img src="${dataUrl}" alt="${post.fileOriginalName}" class="img-fluid rounded-lg my-3" style="max-height: 300px; object-fit: contain; width: 100%; border: 1px solid #eee;">`;
+                    } else if (post.fileType === 'document') {
+                        fileDisplayHtml = `
+                            <div class="alert alert-light alert-dismissible fade show d-flex align-items-center justify-content-between p-2 my-3" role="alert">
+                                <div>
+                                    <i class="fas fa-file-alt me-2"></i>
+                                    <a href="${dataUrl}" download="${post.fileOriginalName}" class="alert-link fw-bold text-dark">Download: ${post.fileOriginalName}</a>
+                                    <small class="text-muted d-block">${post.fileMimeType}</small>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        `;
+                    }
+                }
+
+                postElement.innerHTML = `
+                    <div class="p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="user-avatar me-3">${post.user ? post.user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '??'}</div>
+                            <div>
+                                <h6 class="mb-0">${post.user ? post.user.name : 'Unknown User'}</h6>
+                                <small class="text-muted">${post.user ? `${post.user.course} from ${post.user.college}` : 'N/A'}</small>
+                            </div>
+                            <span class="ms-auto post-type-badge ${typeClass}">${post.type}</span>
+                        </div>
+                        <h4 class="mb-2">${post.title}</h4>
+                        <p class="text-muted mb-3">${post.content}</p>
+                        ${fileDisplayHtml} <!-- Insert file/image display HTML here -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <button class="btn-action ${likeButtonClass}" onclick="toggleLike('${post._id}')">
+                                    <i class="fas fa-heart"></i> ${likeCount} Likes
+                                </button>
+                                <button class="btn-action">
+                                    <i class="fas fa-comment"></i> ${post.comments || 0} Comments
+                                </button>
+                                <button class="btn-action">
+                                    <i class="fas fa-share"></i> Share
+                                </button>
+                            </div>
+                            <small class="text-muted">${new Date(post.createdAt).toLocaleDateString()}</small>
+                        </div>
+                    </div>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        }
+
+        async function toggleLike(postId) {
+            if (!currentUser) { showToast('Please login to like posts.', 'info'); showLoginModal(); return; }
+            try {
+                const response = await apiCall(`/posts/${postId}/like`, { method: 'POST' });
+                const postIndex = posts.findIndex(p => p._id === postId);
+                if (postIndex > -1) {
+                    posts[postIndex].likes = response.likes;
+                    posts[postIndex].likedBy = Array.isArray(response.likedBy) ? response.likedBy : [];
+                    renderPosts();
+                }
+            } catch (error) {
+                showToast('Failed to like post: ' + error.message, 'error');
+            }
+        }
+
+        let searchTimeout;
+        function handleSearch(e) {
+            clearTimeout(searchTimeout);
+            const query = e.target.value;
+            searchTimeout = setTimeout(() => {
+                fetchPosts(query);
+            }, 500);
+        }
+
+        // --- NOTE FUNCTIONS (New) ---
+        async function handleCreateNote(e) {
+            e.preventDefault();
+            if (!currentUser) { showToast('Please login to create notes.', 'info'); showLoginModal(); return; }
+
+            const title = document.getElementById('noteTitle').value;
+            const content = document.getElementById('noteContent').value;
+            const tags = document.getElementById('noteTags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+
+            try {
+                const newNoteData = await apiCall('/notes', {
+                    method: 'POST',
+                    body: JSON.stringify({ title, content, tags })
+                });
+                notes.unshift(newNoteData.note);
+                renderNotes();
+                document.getElementById('createNoteForm').reset();
+                createNoteModal.hide();
+                showToast('Note saved successfully! 📝', 'success');
+            } catch (error) {
+                showToast('Failed to save note: ' + error.message, 'error');
+            }
+        }
+
+        async function fetchNotes() {
+            const myNotesContainer = document.getElementById('myNotesContainer');
+            myNotesContainer.innerHTML = '<div class="loading-spinner"></div>';
+            try {
+                const data = await apiCall('/notes');
+                notes = data.notes;
+                renderNotes();
+            } catch (error) {
+                myNotesContainer.innerHTML = '<p class="text-center text-muted">No notes found. Create your first note!</p>';
+            }
+        }
+
+        function renderNotes() {
+            const myNotesContainer = document.getElementById('myNotesContainer');
+            myNotesContainer.innerHTML = '';
+
+            if (notes.length === 0) {
+                myNotesContainer.innerHTML = '<p class="text-center text-muted">No notes found. Create your first note!</p>';
+                return;
+            }
+
+            notes.forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('note-card', 'mb-3', 'p-3', 'fade-in');
+                noteElement.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0">${note.title}</h5>
+                        <div class="note-actions">
+                            <button class="btn btn-sm btn-outline-secondary me-1" onclick="editNote('${note._id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteNote('${note._id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-muted small">${note.content.substring(0, 150)}${note.content.length > 150 ? '...' : ''}</p>
+                    <div class="d-flex flex-wrap gap-1">
+                        ${note.tags.map(tag => `<span class="badge bg-light text-secondary">${tag}</span>`).join('')}
+                    </div>
+                    <small class="text-muted mt-2 d-block text-end">Last updated: ${new Date(note.updatedAt).toLocaleDateString()}</small>
+                `;
+                myNotesContainer.appendChild(noteElement);
+            });
+        }
+        
+        async function editNote(noteId) {
+            showToast('Edit functionality for notes is coming soon!', 'info');
+        }
+
+        async function deleteNote(noteId) {
+            if (!confirm('Are you sure you want to delete this note?')) { return; }
+            try {
+                await apiCall(`/notes/${noteId}`, { method: 'DELETE' });
+                notes = notes.filter(note => note._id !== noteId);
+                renderNotes();
+                showToast('Note deleted successfully!', 'success');
+            } catch (error) {
+                showToast('Failed to delete note: ' + error.message, 'error');
+            }
+        }
+
+
+        // --- DEADLINE FUNCTIONS (New) ---
+        async function handleCreateDeadline(e) {
+            e.preventDefault();
+            if (!currentUser) { showToast('Please login to add deadlines.', 'info'); showLoginModal(); return; }
+
+            const title = document.getElementById('deadlineTitle').value;
+            const description = document.getElementById('deadlineDescription').value;
+            const dueDate = document.getElementById('deadlineDueDate').value;
+            const type = document.getElementById('deadlineType').value;
+            const isPublic = document.getElementById('deadlineIsPublic').checked;
+
+            if (!title || !dueDate || !type) { showToast('Please fill all required deadline fields.', 'error'); return; }
+
+            try {
+                const newDeadlineData = await apiCall('/deadlines', {
+                    method: 'POST',
+                    body: JSON.stringify({ title, description, dueDate, type, isPublic })
+                });
+                deadlines.unshift(newDeadlineData.deadline);
+                renderDeadlines(true); // Re-render main deadlines section
+                fetchDeadlines(); // Refresh sidebar deadlines
+                document.getElementById('createDeadlineForm').reset();
+                createDeadlineModal.hide();
+                showToast('Deadline added successfully! 🗓️', 'success');
+            } catch (error) {
+                showToast('Failed to add deadline: ' + error.message, 'error');
+            }
+        }
+        
+        async function fetchDeadlines(forMainSection = false) {
+            const container = forMainSection ? document.getElementById('allDeadlinesContainer') : document.getElementById('deadlinesList');
+            container.innerHTML = '<div class="loading-spinner"></div>';
+            try {
+                const data = await apiCall('/deadlines');
+                const fetchedDeadlines = data.deadlines;
+
+                if (forMainSection) {
+                    deadlines = fetchedDeadlines;
+                    renderDeadlines(forMainSection);
+                } else {
+                    const upcoming = fetchedDeadlines.filter(d => new Date(d.dueDate) >= new Date()).slice(0, 5);
+                    renderSidebarDeadlines(upcoming);
+                }
+            } catch (error) {
+                container.innerHTML = '<p class="text-muted small">No upcoming deadlines.</p>';
+            }
+        }
+
+        function renderDeadlines(forMainSection) {
+            const container = document.getElementById('allDeadlinesContainer');
+            container.innerHTML = '';
+
+            if (deadlines.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted">No deadlines found. Add one!</p>';
+                return;
+            }
+
+            deadlines.forEach(deadline => {
+                const deadlineElement = document.createElement('div');
+                deadlineElement.classList.add('note-card', 'mb-3', 'p-3', 'fade-in');
+                const dueDate = new Date(deadline.dueDate);
+                const isOverdue = dueDate < new Date();
+                const textColorClass = isOverdue ? 'text-danger' : 'text-success';
+
+                deadlineElement.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0">${deadline.title}</h5>
+                        <div class="deadline-actions">
+                            ${deadline.user === currentUser._id ? `
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteDeadline('${deadline._id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <p class="text-muted small">${deadline.description || 'No description.'}</p>
+                    <small class="d-block mt-2">Type: <span class="badge bg-secondary">${deadline.type}</span></small>
+                    <small class="d-block mt-2">College: <span class="badge bg-info">${deadline.college}</span></small>
+                    <small class="d-block mt-2">Public: ${deadline.isPublic ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-warning">No</span>'}</small>
+                    <small class="d-block text-end fw-bold ${textColorClass}">Due: ${dueDate.toLocaleDateString()}</small>
+                `;
+                container.appendChild(deadlineElement);
+            });
+        }
+
+        function renderSidebarDeadlines(upcomingDeadlines) {
+            const deadlinesList = document.getElementById('deadlinesList');
+            deadlinesList.innerHTML = '';
+            if (upcomingDeadlines.length === 0) {
+                deadlinesList.innerHTML = '<p class="text-muted small">No upcoming deadlines.</p>';
+                return;
+            }
+            upcomingDeadlines.forEach(deadline => {
+                const deadlineElement = document.createElement('div');
+                deadlineElement.classList.add('alert', 'alert-light', 'p-2', 'mb-2');
+                const dueDate = new Date(deadline.dueDate);
+                const isOverdue = dueDate < new Date();
+                const textColorClass = isOverdue ? 'text-danger' : 'text-success';
+                deadlineElement.innerHTML = `
+                    <small class="fw-bold text-dark">${deadline.title}</small><br>
+                    <small class="text-muted ${textColorClass}">${dueDate.toLocaleDateString()} - ${deadline.type}</small>
+                `;
+                deadlinesList.appendChild(deadlineElement);
+            });
+        }
+
+        async function deleteDeadline(deadlineId) {
+            if (!confirm('Are you sure you want to delete this deadline?')) { return; }
+            try {
+                await apiCall(`/deadlines/${deadlineId}`, { method: 'DELETE' });
+                deadlines = deadlines.filter(d => d._id !== deadlineId);
+                renderDeadlines(true);
+                fetchDeadlines();
+                showToast('Deadline deleted successfully!', 'success');
+            } catch (error) {
+                showToast('Failed to delete deadline: ' + error.message, 'error');
+            }
+        }
+
+
+        // --- STUDY GROUP FUNCTIONS (New) ---
+        async function handleCreateGroup(e) {
+            e.preventDefault();
+            if (!currentUser) { showToast('Please login to create groups.', 'info'); showLoginModal(); return; }
+
+            const name = document.getElementById('groupName').value;
+            const description = document.getElementById('groupDescription').value;
+            const tags = document.getElementById('groupTags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+
+            try {
+                const newGroupData = await apiCall('/groups', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, description, tags })
+                });
+                studyGroups.unshift(newGroupData.group);
+                renderStudyGroups();
+                fetchStudyGroups();
+                document.getElementById('createGroupForm').reset();
+                createGroupModal.hide();
+                showToast('Study group created successfully! 🤝', 'success');
+            } catch (error) {
+                showToast('Failed to create group: ' + error.message, 'error');
+            }
+        }
+
+        async function fetchStudyGroups(myGroupsOnly = false) {
+            const studyGroupsContainer = document.getElementById('studyGroupsContainer');
+            const sidebarStudyGroupsList = document.getElementById('studyGroupsList');
+            
+            studyGroupsContainer.innerHTML = '<div class="loading-spinner"></div>';
+            sidebarStudyGroupsList.innerHTML = '<div class="loading-spinner"></div>';
+
+            try {
+                const endpoint = myGroupsOnly ? '/groups?myGroups=true' : '/groups';
+                const data = await apiCall(endpoint);
+                studyGroups = data.groups;
+
+                renderStudyGroups();
+
+                const sidebarGroups = data.groups.slice(0, 5);
+                renderSidebarStudyGroups(sidebarGroups);
+
+                if (myGroupsOnly) {
+                    document.getElementById('btnMyGroups').classList.add('active');
+                    document.getElementById('btnAllGroups').classList.remove('active');
+                } else {
+                    document.getElementById('btnAllGroups').classList.add('active');
+                    document.getElementById('btnMyGroups').classList.remove('active');
+                }
+
+            } catch (error) {
+                studyGroupsContainer.innerHTML = '<p class="text-center text-muted">No study groups found. Be the first to create one!</p>';
+                sidebarStudyGroupsList.innerHTML = '<p class="text-muted small">No active study groups.</p>';
+            }
+        }
+
+        function renderStudyGroups() {
+            const studyGroupsContainer = document.getElementById('studyGroupsContainer');
+            studyGroupsContainer.innerHTML = '';
+
+            if (studyGroups.length === 0) {
+                studyGroupsContainer.innerHTML = '<p class="text-center text-muted">No study groups found. Be the first to create one!</p>';
+                return;
+            }
+
+            studyGroups.forEach(group => {
+                const groupElement = document.createElement('div');
+                groupElement.classList.add('group-card', 'mb-3', 'p-3', 'fade-in');
+
+                const isMember = group.members.includes(currentUser._id);
+                const isCreator = group.creator._id === currentUser._id;
+
+                groupElement.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0">${group.name}</h5>
+                        <div class="group-actions">
+                            ${isCreator ? `
+                                <button class="btn btn-sm btn-outline-danger me-1" onclick="deleteGroup('${group._id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : ''}
+                            ${!isCreator && !isMember ? `
+                                <button class="btn btn-sm btn-gradient" onclick="joinGroup('${group._id}')">
+                                    <i class="fas fa-user-plus"></i> Join
+                                </button>
+                            ` : ''}
+                            ${!isCreator && isMember ? `
+                                <button class="btn btn-sm btn-outline-secondary" onclick="leaveGroup('${group._id}')">
+                                    <i class="fas fa-user-minus"></i> Leave
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <p class="text-muted small">${group.description || 'No description provided.'}</p>
+                    <small class="d-block mt-2">Creator: <span class="fw-bold">${group.creator.name}</span></small>
+                    <small class="d-block mt-1">Members: <span class="badge bg-info">${group.members.length}</span></small>
+                    <div class="d-flex flex-wrap gap-1 mt-2">
+                        ${group.tags.map(tag => `<span class="badge bg-light text-secondary">${tag}</span>`).join('')}
+                    </div>
+                `;
+                studyGroupsContainer.appendChild(groupElement);
+            });
+        }
+
+        function renderSidebarStudyGroups(groups) {
+            const studyGroupsList = document.getElementById('studyGroupsList');
+            studyGroupsList.innerHTML = '';
+            if (groups.length === 0) {
+                studyGroupsList.innerHTML = '<p class="text-muted small">No active study groups.</p>';
+                return;
+            }
+            groups.forEach(group => {
+                const groupElement = document.createElement('div');
+                groupElement.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-2');
+                groupElement.innerHTML = `
+                    <a href="#" class="text-decoration-none text-dark fw-medium">${group.name}</a>
+                    <span class="badge bg-info text-white">${group.members.length} Members</span>
+                `;
+                studyGroupsList.appendChild(groupElement);
+            });
+        }
+
+        async function joinGroup(groupId) {
+            if (!currentUser) { showToast('Please login to join groups.', 'info'); showLoginModal(); return; }
+            try {
+                const response = await apiCall(`/groups/${groupId}/join`, { method: 'POST' });
+                const groupIndex = studyGroups.findIndex(g => g._id === groupId);
+                if (groupIndex > -1) {
+                    studyGroups[groupIndex].members = response.group.members;
+                    renderStudyGroups();
+                    fetchStudyGroups();
+                }
+                showToast('Joined group successfully!', 'success');
+            } catch (error) {
+                showToast('Failed to join group: ' + error.message, 'error');
+            }
+        }
+
+        async function leaveGroup(groupId) {
+            if (!currentUser) { showToast('Please login to leave groups.', 'info'); showLoginModal(); return; }
+            try {
+                const response = await apiCall(`/groups/${groupId}/leave`, { method: 'POST' });
+                const groupIndex = studyGroups.findIndex(g => g._id === groupId);
+                if (groupIndex > -1) {
+                    studyGroups[groupIndex].members = response.group.members;
+                    renderStudyGroups();
+                    fetchStudyGroups();
+                }
+                showToast('Left group successfully.', 'success');
+            } catch (error) {
+                showToast('Failed to leave group: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteGroup(groupId) {
+            if (!confirm('Are you sure you want to delete this group? This action cannot be undone.')) { return; }
+            try {
+                await apiCall(`/groups/${groupId}`, { method: 'DELETE' });
+                studyGroups = studyGroups.filter(g => g._id !== groupId);
+                renderStudyGroups();
+                fetchStudyGroups();
+                showToast('Group deleted successfully!', 'success');
+            } catch (error) {
+                showToast('Failed to delete group: ' + error.message, 'error');
+            }
+        }
+
+        // --- Mock Data Functions (Existing, kept for trending topics) ---
+        async function fetchTrendingTopics() {
+            const trendingTopicsDiv = document.getElementById('trendingTopics');
+            trendingTopicsDiv.innerHTML = '<div class="loading-spinner"></div>';
+            try {
+                const data = await new Promise(resolve => setTimeout(() => resolve({
+                    topics: [
+                        { name: 'Machine Learning', posts: 120 },
+                        { name: 'Web Development', posts: 90 },
+                        { name: 'Competitive Programming', posts: 75 },
+                        { name: 'Data Structures', posts: 60 },
+                        { name: 'Campus Events', posts: 55 }
+                    ]
+                }), 800));
+
+                trendingTopicsDiv.innerHTML = '';
+                data.topics.forEach(topic => {
+                    const topicElement = document.createElement('div');
+                    topicElement.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-2');
+                    topicElement.innerHTML = `
+                        <a href="#" class="text-decoration-none text-dark fw-medium">${topic.name}</a>
+                        <span class="badge bg-light text-primary">${topic.posts} Posts</span>
+                    `;
+                    trendingTopicsDiv.appendChild(topicElement);
+                });
+            } catch (error) {
+                trendingTopicsDiv.innerHTML = '<p class="text-muted small">Could not load trending topics.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
