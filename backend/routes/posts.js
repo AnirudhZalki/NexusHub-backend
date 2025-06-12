@@ -9,37 +9,32 @@ const auth = require('../middleware/auth'); // Auth middleware to protect routes
 // @desc    Create a new post with optional file/image upload
 // @access  Private (requires token)
 router.post('/', auth, async (req, res, next) => {
-    // Destructure all fields, including new file-related ones
     const { type, title, content, fileBase64, fileMimeType, fileOriginalName, fileType } = req.body;
 
-    // Basic validation for core post fields
     if (!type || !title || !content) {
         return res.status(400).json({ message: 'Please enter title, content, and type for the post.' });
     }
 
-    // Optional validation for file if present
     if (fileBase64 && (!fileMimeType || !fileOriginalName || !fileType)) {
         return res.status(400).json({ message: 'File data requires MIME type, original name, and file type.' });
     }
 
     try {
         const newPost = new Post({
-            user: req.user.id, // User ID from auth middleware
+            user: req.user.id,
             type,
             title,
             content,
-            fileBase64,       // Save Base64 string
-            fileMimeType,     // Save MIME type
-            fileOriginalName, // Save original file name
-            fileType          // Save file type ('image' or 'document')
+            fileBase64,
+            fileMimeType,
+            fileOriginalName,
+            fileType
         });
 
         const post = await newPost.save();
 
-        // Increment user's post count
         await User.findByIdAndUpdate(req.user.id, { $inc: { postCount: 1 } });
 
-        // Populate user details for the response
         await post.populate('user', 'name course college');
 
         res.status(201).json({
@@ -47,6 +42,7 @@ router.post('/', auth, async (req, res, next) => {
             post: post
         });
     } catch (error) {
+        console.error('Error creating post:', error); // Added logging
         next(error);
     }
 });
@@ -59,7 +55,6 @@ router.get('/', async (req, res, next) => {
     let query = {};
 
     if (searchQuery) {
-        // Case-insensitive search on title and content
         query = {
             $or: [
                 { title: { $regex: searchQuery, $options: 'i' } },
@@ -69,13 +64,15 @@ router.get('/', async (req, res, next) => {
     }
 
     try {
-        // Fetch posts, sort by createdAt (newest first), and populate user details
+        console.log('Attempting to fetch posts from MongoDB...'); // Added logging
         const posts = await Post.find(query)
-                                .sort({ createdAt: -1 })
-                                .populate('user', 'name course college') // Select specific fields from user
-                                .exec();
+                                 .sort({ createdAt: -1 })
+                                 .populate('user', 'name course college')
+                                 .exec();
+        console.log(`Successfully fetched ${posts.length} posts.`); // Added logging
         res.status(200).json({ posts });
     } catch (error) {
+        console.error('SERVER ERROR: Failed to fetch posts in /api/posts GET route:', error); // Enhanced error logging
         next(error);
     }
 });
@@ -86,7 +83,7 @@ router.get('/', async (req, res, next) => {
 router.post('/:id/like', auth, async (req, res, next) => {
     try {
         const postId = req.params.id;
-        const userId = req.user.id; // User ID from auth middleware
+        const userId = req.user.id;
 
         const post = await Post.findById(postId);
 
@@ -97,12 +94,10 @@ router.post('/:id/like', auth, async (req, res, next) => {
         const isLiked = post.likedBy.includes(userId);
 
         if (isLiked) {
-            // Unlike the post
-            post.likes = Math.max(0, post.likes - 1); // Ensure likes don't go below 0
+            post.likes = Math.max(0, post.likes - 1);
             post.likedBy = post.likedBy.filter(id => id.toString() !== userId.toString());
             res.status(200).json({ message: 'Post unliked', likes: post.likes, likedBy: post.likedBy });
         } else {
-            // Like the post
             post.likes += 1;
             post.likedBy.push(userId);
             res.status(200).json({ message: 'Post liked', likes: post.likes, likedBy: post.likedBy });
@@ -111,9 +106,55 @@ router.post('/:id/like', auth, async (req, res, next) => {
         await post.save();
 
     } catch (error) {
+        console.error('Error liking/unliking post:', error); // Added logging
+        next(error);
+    }
+});
+
+// @route GET /api/posts/trending
+// @desc Get trending topics based on post activity
+// @access Public
+router.get('/trending', async (req, res, next) => {
+    try {
+        console.log('Attempting to fetch trending topics from MongoDB...'); // Added logging
+        const trendingTopics = await Post.aggregate([
+            {
+                $group: {
+                    _id: '$type',
+                    posts: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { posts: -1 }
+            },
+            {
+                $limit: 5
+            },
+            {
+                $project: {
+                    _id: 0,
+                    name: '$_id',
+                    posts: 1
+                }
+            }
+        ]);
+        console.log(`Successfully fetched ${trendingTopics.length} trending topics.`); // Added logging
+
+        if (trendingTopics.length === 0) {
+            return res.status(200).json({
+                trends: [
+                    { name: 'General Discussions', posts: 10 },
+                    { name: 'Study Tips', posts: 8 },
+                    { name: 'Coding Challenges', posts: 7 }
+                ]
+            });
+        }
+
+        res.status(200).json({ trends: trendingTopics });
+    } catch (error) {
+        console.error('SERVER ERROR: Failed to fetch trending topics:', error); // Enhanced error logging
         next(error);
     }
 });
 
 module.exports = router;
-

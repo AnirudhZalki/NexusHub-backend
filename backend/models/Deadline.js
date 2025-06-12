@@ -1,8 +1,8 @@
 // smartbvb-backend/models/Deadline.js
 const mongoose = require('mongoose');
 
-const deadlineSchema = new mongoose.Schema({
-    user: { // The user who created this deadline
+const DeadlineSchema = new mongoose.Schema({
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -10,33 +10,28 @@ const deadlineSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
-        trim: true,
-        maxlength: 100
+        trim: true
     },
     description: {
         type: String,
-        trim: true,
-        maxlength: 500,
-        default: ''
+        trim: true
     },
     dueDate: {
         type: Date,
         required: true
     },
-    type: { // e.g., 'assignment', 'exam', 'event', 'project'
+    type: { // e.g., 'assignment', 'exam', 'project', 'event'
         type: String,
         required: true,
-        enum: ['assignment', 'exam', 'project', 'event', 'other'],
-        default: 'other'
+        enum: ['assignment', 'exam', 'project', 'event', 'other']
     },
-    college: { // Associate deadline with a college (e.g., for public college deadlines)
-        type: String,
-        required: true,
-        enum: ['bvb', 'kit'] // Matches your User model's college enum
-    },
-    isPublic: { // Can this deadline be seen by others in the same college?
+    isPublic: { // Can be shared with other students in the same college
         type: Boolean,
         default: false
+    },
+    college: { // Automatically filled based on user's college
+        type: String,
+        required: true
     },
     createdAt: {
         type: Date,
@@ -44,4 +39,4 @@ const deadlineSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Deadline', deadlineSchema);
+module.exports = mongoose.model('Deadline', DeadlineSchema);

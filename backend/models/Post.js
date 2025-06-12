@@ -1,58 +1,58 @@
 // smartbvb-backend/models/Post.js
 const mongoose = require('mongoose');
 
-const postSchema = new mongoose.Schema({
+const PostSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to the User model
+        ref: 'User',
         required: true
     },
-    type: {
+    type: { // e.g., 'book', 'notes', 'personal', 'question'
         type: String,
         required: true,
-        enum: ['book', 'notes', 'personal', 'question'] // Define allowed post types
+        enum: ['book', 'notes', 'personal', 'question']
     },
     title: {
         type: String,
         required: true,
-        trim: true,
-        maxlength: 100
+        trim: true
     },
     content: {
         type: String,
         required: true,
-        maxlength: 1000
+        trim: true
     },
-    // --- NEW FIELDS FOR FILE/IMAGE UPLOAD ---
-    fileBase64: { // Base64 encoded string of the file/image
-        type: String,
-        default: null
-    },
-    fileMimeType: { // e.g., 'image/jpeg', 'application/pdf'
-        type: String,
-        default: null
-    },
-    fileOriginalName: { // Original name of the uploaded file
-        type: String,
-        default: null
-    },
-    fileType: { // 'image' or 'document' (for frontend display)
-        type: String,
-        enum: ['image', 'document', null],
-        default: null
-    },
-    // --- END NEW FIELDS ---
+    // For likes
     likes: {
         type: Number,
         default: 0
     },
-    likedBy: [{ // Array to store user IDs who liked the post (for easy toggling)
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    comments: { // Simple counter for comments
+    likedBy: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
+    comments: { // Simple count, can be expanded to a subdocument array for actual comments
         type: Number,
         default: 0
+    },
+    // Fields for optional file attachment
+    fileBase64: {
+        type: String,
+        default: null
+    },
+    fileMimeType: {
+        type: String,
+        default: null
+    },
+    fileOriginalName: {
+        type: String,
+        default: null
+    },
+    fileType: { // e.g., 'image', 'document'
+        type: String,
+        default: null
     },
     createdAt: {
         type: Date,
@@ -60,5 +60,4 @@ const postSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Post', postSchema);
-
+module.exports = mongoose.model('Post', PostSchema);
