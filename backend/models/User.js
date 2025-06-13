@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -12,14 +12,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        lowercase: true,
         trim: true,
-        match: [/^[\w-]+(\.[\w-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/, 'Please use a valid email address']
+        lowercase: true,
+        match: [/.+@.+\..+/, 'Please fill a valid email address'] // Basic email regex validation
     },
     password: {
         type: String,
-        required: true,
-        minlength: 6 // Minimum password length
+        required: true
     },
     course: {
         type: String,
@@ -29,14 +28,15 @@ const userSchema = new mongoose.Schema({
     college: {
         type: String,
         required: true,
-        enum: ['bvb', 'kit'], // Updated: Removed 'sdm' from here
+        enum: ['bvb', 'kit'], // Assuming these are your college options
         trim: true
     },
+    // Optional fields for dashboard display
     postCount: {
         type: Number,
         default: 0
     },
-    followersCount: { // Example field, could be used for follower count
+    followersCount: {
         type: Number,
         default: 0
     },
@@ -46,20 +46,25 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-// Hash the password before saving the user
-userSchema.pre('save', async function(next) {
+// Middleware to hash password before saving
+// 'pre' hook runs before a document is saved
+UserSchema.pre('save', async function(next) {
+    // Only hash the password if it has been modified (or is new)
+    // This prevents re-hashing an already hashed password on subsequent saves (e.g., profile updates)
     if (!this.isModified('password')) {
         return next();
     }
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
+
+    try {
+        // Generate a salt
+        const salt = await bcrypt.genSalt(10); // 10 is a good default for salt rounds
+        // Hash the password using the generated salt
+        this.password = await bcrypt.hash(this.password, salt);
+        next(); // Proceed with saving
+    } catch (error) {
+        console.error('Error hashing password in User pre-save hook:', error.message);
+        next(error); // Pass the error to Mongoose
+    }
 });
 
-// Method to compare entered password with hashed password in DB
-userSchema.methods.matchPassword = async function(enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
-};
-
-module.exports = mongoose.model('User', userSchema);
-
+module.exports = mongoose.model('User', UserSchema);
