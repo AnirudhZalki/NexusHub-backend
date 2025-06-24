@@ -171,9 +171,23 @@ exports.addCommentToPost = async (req, res, next) => {
         const { content } = req.body;
         const userId = req.user.id; // User ID from auth middleware
 
+        // --- DEBUG LOGS START ---
+        console.log(`Backend: addCommentToPost - Attempting to add comment to post ID: ${postId}`);
+        console.log(`Backend: addCommentToPost - Current User ID (req.user.id): ${userId}, Type: ${typeof userId}`);
+        console.log(`Backend: addCommentToPost - Comment Content: "${content}"`);
+        // --- DEBUG LOGS END ---
+
+
         if (!content) {
             throw new CustomError('Comment content is required.', 400);
         }
+
+        // Validate userId is present and looks like a valid MongoDB ObjectId
+        if (!userId || typeof userId !== 'string' || !userId.match(/^[0-9a-fA-F]{24}$/)) {
+            console.error('Backend: addCommentToPost - Validation failed: userId is missing or not a valid ObjectId string.');
+            throw new CustomError('Authentication error: Invalid user ID for commenting.', 401);
+        }
+
 
         const post = await Post.findById(postId);
 
@@ -186,8 +200,10 @@ exports.addCommentToPost = async (req, res, next) => {
             content: sanitizeInput(content)
         };
 
+        console.log('Backend: addCommentToPost - New comment object before push:', newComment);
+
         post.comments.push(newComment);
-        await post.save();
+        await post.save(); // <-- This is where the error currently occurs, if `newComment.user` is invalid after Mongoose attempts to cast it.
 
         // After saving, re-fetch the post to ensure comments are populated correctly for the response
         const updatedPost = await Post.findById(postId).populate('comments.user', 'name');
@@ -198,6 +214,7 @@ exports.addCommentToPost = async (req, res, next) => {
             commentsCount: updatedPost.comments.length // Return updated count
         });
     } catch (error) {
+        console.error('Backend Error in addCommentToPost:', error.message);
         next(error);
     }
 };
