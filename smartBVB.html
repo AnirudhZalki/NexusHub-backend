@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Base Variables - unchanged */
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -20,8 +21,46 @@
             --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
             --border-radius: 16px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Light mode specific colors */
+            --body-bg-light: var(--primary-gradient);
+            --navbar-bg-light: rgba(255, 255, 255, 0.95);
+            --navbar-border-light: var(--glass-border);
+            --text-color-light: #1a202c;
+            --dashboard-bg-light: white;
+            --card-bg-light: white;
+            --card-border-light: #e2e8f0;
+            --form-control-bg-light: white;
+            --form-control-border-light: #e2e8f0;
+            --form-control-color-light: #333;
+            --sidebar-item-bg-light: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --toast-text-color-light: white;
+            --chat-bg-light: #f8f9fa;
+            --chat-other-bubble-bg-light: #e2e8f0;
+            --chat-other-bubble-text-light: #343a40;
+            --chat-time-color-light: #6c757d;
         }
 
+        /* Dark Mode Variables - dynamically applied */
+        html[data-theme="dark"] {
+            --body-bg-dark: var(--dark-gradient);
+            --navbar-bg-dark: rgba(26, 32, 44, 0.95);
+            --navbar-border-dark: rgba(45, 55, 72, 0.2);
+            --text-color-dark: #e2e8f0;
+            --dashboard-bg-dark: #1a202c;
+            --card-bg-dark: #2d3748;
+            --card-border-dark: #4a5568;
+            --form-control-bg-dark: #4a5568;
+            --form-control-border-dark: #6a768e;
+            --form-control-color-dark: white;
+            --sidebar-item-bg-dark: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --toast-text-color-dark: white; /* toasts remain light-colored */
+            --chat-bg-dark: #2d3748;
+            --chat-other-bubble-bg-dark: #4a5568;
+            --chat-other-bubble-text-dark: #e2e8f0;
+            --chat-time-color-dark: #cbd5e0;
+        }
+
+        /* Global base styles */
         * {
             margin: 0;
             padding: 0;
@@ -30,18 +69,35 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--primary-gradient);
             min-height: 100vh;
             overflow-x: hidden;
+            /* Default to light theme */
+            background: var(--body-bg-light);
+            color: var(--text-color-light);
         }
 
-        /* Modern Glassmorphism Navbar */
+        /* Dynamic Theme Application */
+        html[data-theme="light"] body {
+            background: var(--body-bg-light);
+            color: var(--text-color-light);
+        }
+
+        html[data-theme="dark"] body {
+            background: var(--body-bg-dark);
+            color: var(--text-color-dark);
+        }
+
+        /* Navbar */
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
+            background: var(--navbar-bg-light);
+            border: 1px solid var(--navbar-border-light);
             box-shadow: var(--shadow-sm);
             transition: var(--transition);
+            backdrop-filter: blur(20px); /* Apply blur to navbar regardless of theme for glassmorphism */
+        }
+        html[data-theme="dark"] .navbar {
+            background: var(--navbar-bg-dark);
+            border: 1px solid var(--navbar-border-dark);
         }
 
         .navbar-brand {
@@ -52,15 +108,24 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        html[data-theme="dark"] .navbar-brand {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
         .nav-link {
             font-weight: 500;
-            color: #1a202c !important;
+            color: var(--text-color-light) !important;
             padding: 0.5rem 1rem !important;
             border-radius: 12px;
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+        }
+        html[data-theme="dark"] .nav-link {
+            color: var(--text-color-dark) !important;
         }
 
         .nav-link::before {
@@ -74,6 +139,9 @@
             transition: var(--transition);
             z-index: -1;
         }
+        html[data-theme="dark"] .nav-link::before {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
 
         .nav-link:hover::before {
             left: 0;
@@ -84,7 +152,7 @@
             transform: translateY(-2px);
         }
 
-        /* Modern Buttons */
+        /* Buttons (unchanged, gradients are universal) */
         .btn-gradient {
             background: var(--primary-gradient);
             border: none;
@@ -119,7 +187,7 @@
             color: white;
         }
 
-        /* Hero Section */
+        /* Hero Section (colors use gradients, so mostly universal) */
         .hero-section {
             padding: 80px 0;
             text-align: center;
@@ -142,6 +210,9 @@
             margin-left: auto;
             margin-right: auto;
         }
+        html[data-theme="dark"] .hero-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+        }
 
         /* Modern Cards */
         .glass-card {
@@ -152,6 +223,10 @@
             padding: 2rem;
             transition: var(--transition);
             box-shadow: var(--shadow-sm);
+        }
+        html[data-theme="dark"] .glass-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .glass-card:hover {
@@ -175,22 +250,33 @@
 
         /* Dashboard */
         .dashboard-container {
-            background: white;
+            background: var(--dashboard-bg-light);
             min-height: 100vh;
             border-radius: 24px 24px 0 0;
             margin-top: 2rem;
             box-shadow: var(--shadow-lg);
         }
+        html[data-theme="dark"] .dashboard-container {
+            background: var(--dashboard-bg-dark);
+            color: var(--text-color-dark);
+        }
 
         .post-card, .note-card, .group-card {
-            background: white;
+            background: var(--card-bg-light);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-sm);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--card-border-light);
             transition: var(--transition);
             overflow: hidden;
             position: relative;
         }
+        html[data-theme="dark"] .post-card,
+        html[data-theme="dark"] .note-card,
+        html[data-theme="dark"] .group-card {
+            background: var(--card-bg-dark);
+            border-color: var(--card-border-dark);
+        }
+
 
         .post-card::before, .note-card::before, .group-card::before {
             content: '';
@@ -226,6 +312,10 @@
             font-size: 1.1rem;
             box-shadow: var(--shadow-sm);
         }
+        html[data-theme="dark"] .user-avatar {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+
 
         .post-type-badge {
             background: var(--success-gradient);
@@ -256,12 +346,16 @@
 
         /* Sidebar */
         .sidebar-card {
-            background: white;
+            background: var(--card-bg-light);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-sm);
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--card-border-light);
+        }
+        html[data-theme="dark"] .sidebar-card {
+            background: var(--card-bg-dark);
+            border-color: var(--card-border-dark);
         }
 
         .stats-grid {
@@ -274,8 +368,11 @@
             text-align: center;
             padding: 1rem;
             border-radius: 12px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background: var(--sidebar-item-bg-light);
             transition: var(--transition);
+        }
+        html[data-theme="dark"] .stat-item {
+            background: var(--sidebar-item-bg-dark);
         }
 
         .stat-item:hover {
@@ -294,10 +391,24 @@
         /* Form Elements */
         .form-control {
             border-radius: 12px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--form-control-border-light);
             padding: 12px 16px;
             transition: var(--transition);
             font-weight: 500;
+            background-color: var(--form-control-bg-light);
+            color: var(--form-control-color-light);
+        }
+        html[data-theme="dark"] .form-control {
+            background-color: var(--form-control-bg-dark);
+            border-color: var(--form-control-border-dark);
+            color: var(--form-control-color-dark);
+        }
+
+        .form-control::placeholder {
+            color: #718096;
+        }
+        html[data-theme="dark"] .form-control::placeholder {
+            color: #cbd5e0;
         }
 
         .form-control:focus {
@@ -305,13 +416,29 @@
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
             transform: translateY(-1px);
         }
+        html[data-theme="dark"] .form-control:focus {
+            border-color: #a1c4fd;
+            box-shadow: 0 0 0 0.2rem rgba(161, 196, 253, 0.25);
+        }
 
         .form-select {
             border-radius: 12px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--form-control-border-light);
             padding: 12px 16px;
             font-weight: 500;
+            background-color: var(--form-control-bg-light);
+            color: var(--form-control-color-light);
         }
+        html[data-theme="dark"] .form-select {
+            background-color: var(--form-control-bg-dark);
+            border-color: var(--form-control-border-dark);
+            color: var(--form-control-color-dark);
+        }
+        /* Style for select arrow in dark mode */
+        html[data-theme="dark"] .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23cbd5e0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        }
+
 
         /* Action Buttons */
         .btn-action {
@@ -332,6 +459,14 @@
             color: #667eea;
             transform: scale(1.1);
         }
+        html[data-theme="dark"] .btn-action {
+            color: #cbd5e0;
+        }
+        html[data-theme="dark"] .btn-action:hover {
+            background: #4a5568;
+            color: #a1c4fd;
+        }
+
 
         .btn-action.liked {
             color: #f56565;
@@ -346,9 +481,16 @@
         .search-wrapper input {
             padding-left: 45px;
             border-radius: 25px;
-            border: 2px solid #e2e8f0;
-            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--form-control-border-light);
+            background: var(--navbar-bg-light); /* Use navbar bg for consistency */
+            color: var(--text-color-light);
         }
+        html[data-theme="dark"] .search-wrapper input {
+            background: var(--navbar-bg-dark);
+            border-color: var(--form-control-border-dark);
+            color: var(--form-control-color-dark);
+        }
+
 
         .search-wrapper .search-icon {
             position: absolute;
@@ -356,6 +498,9 @@
             top: 50%;
             transform: translateY(-50%);
             color: #718096;
+        }
+        html[data-theme="dark"] .search-wrapper .search-icon {
+            color: #cbd5e0;
         }
 
         /* Toast Notifications */
@@ -432,6 +577,181 @@
             }
         }
 
+        /* Group Chat Modal specific styles */
+        #groupChatModal .modal-dialog {
+            max-width: 700px;
+            margin: 1.75rem auto;
+            min-height: 80vh; /* Make modal taller */
+            display: flex;
+            align-items: center;
+        }
+        #groupChatModal .modal-content,
+        #settingsModal .modal-content,
+        #sharePostModal .modal-content { /* Apply similar styling to settings and share modals */
+            height: auto; /* Chat needs dynamic height, settings can be auto */
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+            background: var(--dashboard-bg-light); /* Use dashboard bg for modals */
+            color: var(--text-color-light);
+        }
+        html[data-theme="dark"] #groupChatModal .modal-content,
+        html[data-theme="dark"] #settingsModal .modal-content,
+        html[data-theme="dark"] #sharePostModal .modal-content {
+            background: var(--dashboard-bg-dark);
+            color: var(--text-color-dark);
+        }
+        #groupChatModal .modal-header,
+        #settingsModal .modal-header,
+        #loginModal .modal-header, /* Added for consistency */
+        #signupModal .modal-header, /* Added for consistency */
+        #createNoteModal .modal-header, /* Added for consistency */
+        #editNoteModal .modal-header, /* Added for consistency */
+        #createDeadlineModal .modal-header, /* Added for consistency */
+        #createGroupModal .modal-header, /* Added for consistency */
+        #sharePostModal .modal-header /* Added for consistency */
+        {
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 20px 20px 0 0;
+        }
+        html[data-theme="dark"] #groupChatModal .modal-header,
+        html[data-theme="dark"] #settingsModal .modal-header,
+        html[data-theme="dark"] #loginModal .modal-header, /* Added for consistency */
+        html[data-theme="dark"] #signupModal .modal-header, /* Added for consistency */
+        html[data-theme="dark"] #createNoteModal .modal-header, /* Added for consistency */
+        html[data-theme="dark"] #editNoteModal .modal-header, /* Added for consistency */
+        html[data-theme="dark"] #createDeadlineModal .modal-header, /* Added for consistency */
+        html[data-theme="dark"] #createGroupModal .modal-header, /* Added for consistency */
+        html[data-theme="dark"] #sharePostModal .modal-header /* Added for consistency */
+        {
+            background: var(--dark-gradient) !important;
+        }
+        /* Specific header for confirm modal, which uses secondary gradient */
+        #confirmModal .modal-header {
+            background: var(--secondary-gradient) !important;
+        }
+
+        #groupChatMessages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: var(--chat-bg-light); /* Light background for chat area */
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            flex-direction: column-reverse; /* To make new messages appear at bottom */
+        }
+        html[data-theme="dark"] #groupChatMessages {
+            background-color: var(--chat-bg-dark);
+        }
+
+        #groupChatMessages::-webkit-scrollbar {
+            width: 8px;
+        }
+        #groupChatMessages::-webkit-scrollbar-thumb {
+            background-color: #ced4da;
+            border-radius: 10px;
+        }
+        .chat-message {
+            display: flex;
+            margin-bottom: 1rem;
+            align-items: flex-end;
+        }
+        .chat-message.my-message {
+            justify-content: flex-end;
+        }
+        .chat-message .message-bubble {
+            max-width: 75%;
+            padding: 0.75rem 1rem;
+            border-radius: 1.2rem;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .chat-message .message-bubble .sender-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.8em;
+            color: #495057;
+        }
+        html[data-theme="dark"] .chat-message .message-bubble .sender-name {
+            color: #a1c4fd;
+        }
+
+        .chat-message.my-message .message-bubble {
+            background: var(--primary-gradient);
+            color: white;
+            border-bottom-right-radius: 0.3rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .chat-message.other-message .message-bubble {
+            background-color: var(--chat-other-bubble-bg-light);
+            color: var(--chat-other-bubble-text-light);
+            border-bottom-left-radius: 0.3rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        html[data-theme="dark"] .chat-message.other-message .message-bubble {
+            background-color: var(--chat-other-bubble-bg-dark);
+            color: var(--chat-other-bubble-text-dark);
+        }
+
+        .chat-message .message-time {
+            font-size: 0.7rem;
+            color: var(--chat-time-color-light);
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+        .chat-message.my-message .message-time {
+            color: rgba(255,255,255,0.7);
+        }
+        html[data-theme="dark"] .chat-message .message-time {
+            color: var(--chat-time-color-dark);
+        }
+
+        .message-file-preview {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .message-file-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background-color: rgba(0,0,0,0.1); /* For contrast in light/dark mode */
+            border-radius: 8px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .message-file-link:hover {
+            opacity: 0.8;
+            text-decoration: none;
+        }
+        .message-file-link i {
+            font-size: 1.2rem;
+            color: #6c757d; /* Adjust for dark mode */
+        }
+        html[data-theme="dark"] .message-file-link {
+            background-color: rgba(255,255,255,0.1);
+            color: #e2e8f0;
+        }
+        html[data-theme="dark"] .message-file-link i {
+            color: #cbd5e0;
+        }
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid #e9ecef;
+            background-color: var(--card-bg-light);
+        }
+        html[data-theme="dark"] .chat-input-area {
+            background-color: var(--card-bg-dark);
+        }
+
+        .chat-input-area .form-control {
+            border-radius: 20px;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .hero-title {
@@ -448,92 +768,186 @@
             }
         }
 
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: var(--dark-gradient);
-            }
-            .navbar {
-                background: rgba(26, 32, 44, 0.95);
-                border: 1px solid rgba(45, 55, 72, 0.2);
-            }
-            .navbar-brand {
-                background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-            }
-            .nav-link {
-                color: #e2e8f0 !important;
-            }
-            .nav-link:hover {
-                color: white !important;
-            }
-            .nav-link::before {
-                background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-            }
-            .dashboard-container {
-                background: #1a202c;
-                color: white;
-            }
-            .post-card, .sidebar-card, .note-card, .group-card {
-                background: #2d3748;
-                color: white;
-                border-color: #4a5568;
-            }
-            .glass-card {
-                background: rgba(0, 0, 0, 0.3);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-            .hero-subtitle {
-                color: rgba(255, 255, 255, 0.7);
-            }
-            .user-avatar {
-                background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-            }
-            .form-control, .form-select {
-                background-color: #4a5568;
-                border-color: #6a768e;
-                color: white;
-            }
-            .form-control::placeholder {
-                color: #cbd5e0;
-            }
-            .form-control:focus {
-                border-color: #a1c4fd;
-                box-shadow: 0 0 0 0.2rem rgba(161, 196, 253, 0.25);
-            }
-            .stat-item {
-                background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            }
-            .text-dark {
-                color: #e2e8f0 !important;
-            }
-            .search-wrapper input {
-                background: rgba(45, 55, 72, 0.9);
-                color: white;
-            }
-            .search-wrapper .search-icon {
-                color: #cbd5e0;
-            }
-            .modal-content {
-                background: #1a202c;
-                color: white;
-            }
-            .modal-header {
-                background: var(--dark-gradient) !important;
-            }
-            .btn-close-white {
-                filter: invert(1);
-            }
-            .badge.bg-light {
-                background: #4a5568 !important;
-                color: #a1c4fd !important;
-            }
-            .badge.bg-info {
-                background: #4a5568 !important;
-                color: #a1c4fd !important;
-            }
+        /* Specific dark mode overrides for Bootstrap classes that might not be handled by variables */
+        html[data-theme="dark"] .text-muted {
+            color: #cbd5e0 !important;
+        }
+        html[data-theme="dark"] .text-dark {
+            color: #e2e8f0 !important;
+        }
+        html[data-theme="dark"] .btn-close-white {
+            filter: invert(1);
+        }
+        html[data-theme="dark"] .badge.bg-light {
+            background: #4a5568 !important;
+            color: #a1c4fd !important;
+        }
+        html[data-theme="dark"] .badge.bg-info {
+            background: #4a5568 !important;
+            color: #a1c4fd !important;
+        }
+
+        /* Custom Switch Toggle for Dark Mode */
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-image: var(--primary-gradient); /* Light theme gradient */
+        }
+        html[data-theme="dark"] input:checked + .slider {
+            background-image: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); /* Dark theme gradient */
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* New styles for Share Modal buttons */
+        .share-modal-btn {
+            background: var(--card-bg-light);
+            border: 1px solid var(--card-border-light);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: var(--text-color-light);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        html[data-theme="dark"] .share-modal-btn {
+            background: var(--card-bg-dark);
+            border-color: var(--card-border-dark);
+            color: var(--text-color-dark);
+        }
+
+        .share-modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
+            text-decoration: none;
+            color: var(--text-color-light); /* Maintain color on hover */
+        }
+        html[data-theme="dark"] .share-modal-btn:hover {
+            color: var(--text-color-dark);
+        }
+
+        .share-modal-btn i {
+            font-size: 1.5rem;
+        }
+        .share-modal-btn.whatsapp i { color: #25D366; }
+        .share-modal-btn.facebook i { color: #1877F2; }
+        .share-modal-btn.linkedin i { color: #0A66C2; }
+        .share-modal-btn.copy-link i { color: #6c757d; }
+        .share-modal-btn.innovatehub i { color: #667eea; }
+
+        /* Comment Section styles */
+        .comments-section {
+            border-top: 1px solid var(--card-border-light);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+        html[data-theme="dark"] .comments-section {
+            border-color: var(--card-border-dark);
+        }
+
+        .comment-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            background-color: var(--chat-other-bubble-bg-light); /* Lighter background for comments */
+            border-radius: 12px;
+            padding: 0.75rem;
+        }
+        html[data-theme="dark"] .comment-item {
+            background-color: var(--chat-other-bubble-bg-dark);
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            margin-right: 0.75rem;
+        }
+        html[data-theme="dark"] .comment-avatar {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+
+        .comment-content-wrapper {
+            flex-grow: 1;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-color-light);
+        }
+        html[data-theme="dark"] .comment-author {
+            color: var(--text-color-dark);
+        }
+
+        .comment-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 0.25rem;
+            color: var(--chat-other-bubble-text-light);
+        }
+        html[data-theme="dark"] .comment-text {
+            color: var(--chat-other-bubble-text-dark);
+        }
+
+        .comment-time {
+            font-size: 0.7rem;
+            color: var(--chat-time-color-light);
+            text-align: right;
+        }
+        html[data-theme="dark"] .comment-time {
+            color: var(--chat-time-color-dark);
         }
     </style>
 </head>
@@ -544,7 +958,8 @@
     <!-- Modern Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#" onclick="showSection('home')"><i class="fas fa-graduation-cap me-2"></i>InnovateHub</a>
+            <!-- Removed onclick here -->
+            <a class="navbar-brand" href="#" id="navbarBrandLink"><i class="fas fa-graduation-cap me-2"></i>InnovateHub</a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -553,16 +968,20 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showSection('home')"><i class="fas fa-home me-1"></i>Home</a>
+                        <!-- Removed onclick here -->
+                        <a class="nav-link" href="#" id="navHomeLink"><i class="fas fa-home me-1"></i>Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showSection('notes')"><i class="fas fa-sticky-note me-1"></i>My Notes</a>
+                        <!-- Removed onclick here -->
+                        <a class="nav-link" href="#" id="navNotesLink"><i class="fas fa-sticky-note me-1"></i>My Notes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showSection('deadlines')"><i class="fas fa-calendar-alt me-1"></i>Deadlines</a>
+                        <!-- Removed onclick here -->
+                        <a class="nav-link" href="#" id="navDeadlinesLink"><i class="fas fa-calendar-alt me-1"></i>Deadlines</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showSection('groups')"><i class="fas fa-users me-1"></i>Study Groups</a>
+                        <!-- Removed onclick here -->
+                        <a class="nav-link" href="#" id="navGroupsLink"><i class="fas fa-users me-1"></i>Study Groups</a>
                     </li>
                 </ul>
                 
@@ -573,7 +992,9 @@
                     </div>
                     
                     <div id="userActions">
-                        <button class="btn-gradient pulse-glow" onclick="showLoginModal()">Join Now</button>
+                        <!-- Content updated by JavaScript -->
+                        <!-- Removed onclick here, added id for JS listener -->
+                        <button class="btn-gradient pulse-glow" id="joinNowButton">Join Now</button>
                     </div>
                 </div>
             </div>
@@ -585,7 +1006,8 @@
         <div class="container">
             <h1 class="hero-title">Connect. Learn. Grow.</h1>
             <p class="hero-subtitle">Join the ultimate student community where knowledge flows freely and connections last forever.</p>
-            <button class="btn-gradient btn-lg pulse-glow" onclick="showLoginModal()">
+            <!-- Removed onclick here, added id for JS listener -->
+            <button class="btn-gradient btn-lg pulse-glow" id="getStartedButton">
                 <i class="fas fa-rocket me-2"></i>Get Started
             </button>
         </div>
@@ -646,7 +1068,7 @@
                         </div>
                     </div>
                     
-                    <div class="sidebar-card">
+                    <div class="sidebar-card" id="trendingTopicsCard">
                         <h6 class="mb-3"><i class="fas fa-fire me-2 text-danger"></i>Trending</h6>
                         <div id="trendingTopics">
                             <div class="loading-spinner"></div>
@@ -687,11 +1109,10 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="d-flex gap-2">
-                                            <!-- These buttons are now mostly illustrative as the single file input handles both -->
-                                            <button type="button" class="btn-action" title="Add Image" onclick="document.getElementById('postFile').click()">
+                                            <button type="button" class="btn-action" title="Add Image" id="postImageButton">
                                                 <i class="fas fa-image"></i>
                                             </button>
-                                            <button type="button" class="btn-action" title="Add File" onclick="document.getElementById('postFile').click()">
+                                            <button type="button" class="btn-action" title="Add File" id="postFileButton">
                                                 <i class="fas fa-paperclip"></i>
                                             </button>
                                         </div>
@@ -713,7 +1134,7 @@
                     <div id="notesSection" style="display: none;">
                         <h4 class="mb-4 d-flex justify-content-between align-items-center">
                             <i class="fas fa-sticky-note me-2"></i>My Private Notes
-                            <button class="btn btn-gradient btn-sm" onclick="showCreateNoteModal()">
+                            <button class="btn btn-gradient btn-sm" id="newNoteButton">
                                 <i class="fas fa-plus me-1"></i>New Note
                             </button>
                         </h4>
@@ -726,7 +1147,7 @@
                     <div id="deadlinesSection" style="display: none;">
                         <h4 class="mb-4 d-flex justify-content-between align-items-center">
                             <i class="fas fa-calendar-alt me-2"></i>Upcoming Deadlines
-                            <button class="btn btn-gradient btn-sm" onclick="showCreateDeadlineModal()">
+                            <button class="btn btn-gradient btn-sm" id="addDeadlineButton">
                                 <i class="fas fa-plus me-1"></i>Add Deadline
                             </button>
                         </h4>
@@ -739,13 +1160,13 @@
                     <div id="groupsSection" style="display: none;">
                         <h4 class="mb-4 d-flex justify-content-between align-items-center">
                             <i class="fas fa-users me-2"></i>Study Groups
-                            <button class="btn btn-gradient btn-sm" onclick="showCreateGroupModal()">
+                            <button class="btn btn-gradient btn-sm" id="createGroupButton">
                                 <i class="fas fa-plus me-1"></i>Create Group
                             </button>
                         </h4>
                         <div class="d-flex gap-3 mb-3">
-                            <button class="btn btn-outline-primary active" id="btnAllGroups" onclick="fetchStudyGroups()">All Groups</button>
-                            <button class="btn btn-outline-primary" id="btnMyGroups" onclick="fetchStudyGroups(true)">My Groups</button>
+                            <button class="btn btn-outline-primary active" id="btnAllGroups">All Groups</button>
+                            <button class="btn btn-outline-primary" id="btnMyGroups">My Groups</button>
                         </div>
                         <div id="studyGroupsContainer">
                             <div class="loading-spinner"></div>
@@ -778,7 +1199,7 @@
     <div class="modal fade" id="loginModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
-                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+                <div class="modal-header">
                     <h5 class="modal-title"><i class="fas fa-graduation-cap me-2"></i>Join InnovateHub</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -802,7 +1223,7 @@
                         </button>
                     </form>
                     <div class="text-center">
-                        <p class="mb-0">New here? <a href="#" class="text-decoration-none fw-bold" style="color: #667eea;" onclick="showSignupModal()">Create Account</a></p>
+                        <p class="mb-0">New here? <a href="#" class="text-decoration-none fw-bold" style="color: #667eea;" id="signupLink">Create Account</a></p>
                     </div>
                 </div>
             </div>
@@ -813,7 +1234,7 @@
     <div class="modal fade" id="signupModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
-                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+                <div class="modal-header">
                     <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Create Account</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -843,7 +1264,7 @@
                         </button>
                     </form>
                     <div class="text-center">
-                        <p class="mb-0">Already have an account? <a href="#" class="text-decoration-none fw-bold" style="color: #667eea;" onclick="showLoginModal()">Login</a></p>
+                        <p class="mb-0">Already have an account? <a href="#" class="text-decoration-none fw-bold" style="color: #667eea;" id="loginLink">Login</a></p>
                     </div>
                 </div>
             </div>
@@ -853,8 +1274,8 @@
     <!-- Create Note Modal -->
     <div class="modal fade" id="createNoteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
-                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+            <div class="modal-content">
+                <div class="modal-header">
                     <h5 class="modal-title"><i class="fas fa-sticky-note me-2"></i>Create New Note</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -878,11 +1299,57 @@
         </div>
     </div>
 
+    <!-- Edit Note Modal -->
+    <div class="modal fade" id="editNoteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Note</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="editNoteForm">
+                        <input type="hidden" id="editNoteId">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="editNoteTitle" placeholder="Note Title" required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="editNoteContent" rows="10" placeholder="Your note content..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="editNoteTags" placeholder="Tags (comma-separated, e.g., 'DSA, Study, Exam')">
+                        </div>
+                        <button type="submit" class="btn-gradient w-100 mb-3">
+                            <i class="fas fa-save me-2"></i>Update Note
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation Modal (replaces window.confirm) -->
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header" style="background: var(--secondary-gradient); color: white;">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Action</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <p id="confirmMessage" class="lead mb-4">Are you sure?</p>
+                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal" id="cancelConfirmBtn">Cancel</button>
+                    <button type="button" class="btn-gradient" id="confirmProceedBtn">Proceed</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Create Deadline Modal -->
     <div class="modal fade" id="createDeadlineModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
-                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+            <div class="modal-content">
+                <div class="modal-header">
                     <h5 class="modal-title"><i class="fas fa-calendar-plus me-2"></i>Add New Deadline</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -926,8 +1393,8 @@
     <!-- Create Group Modal -->
     <div class="modal fade" id="createGroupModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
-                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+            <div class="modal-content">
+                <div class="modal-header">
                     <h5 class="modal-title"><i class="fas fa-users-medical me-2"></i>Create New Study Group</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -951,18 +1418,146 @@
         </div>
     </div>
 
+    <!-- Group Chat Modal -->
+    <div class="modal fade" id="groupChatModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="groupChatTitle">Group Chat</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0 d-flex flex-column">
+                    <div id="groupChatMessages">
+                        <!-- Messages will be rendered here -->
+                    </div>
+                    <div class="chat-input-area d-flex align-items-center gap-2">
+                        <input type="file" id="chatFile" class="d-none" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                        <button class="btn btn-outline-secondary" id="chatFileButton">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <input type="text" class="form-control" id="chatMessageInput" placeholder="Type your message...">
+                        <button class="btn btn-gradient" id="sendMessageBtn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Post Modal (NEW) -->
+    <div class="modal fade" id="sharePostModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-share-alt me-2"></i>Share Post</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-muted text-center mb-4">Share this post with your connections!</p>
+                    <div class="d-grid gap-3">
+                        <a href="#" id="shareWhatsapp" class="share-modal-btn whatsapp" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-whatsapp"></i> Share on WhatsApp
+                        </a>
+                        <a href="#" id="shareFacebook" class="share-modal-btn facebook" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-facebook"></i> Share on Facebook
+                        </a>
+                        <a href="#" id="shareLinkedin" class="share-modal-btn linkedin" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-linkedin"></i> Share on LinkedIn
+                        </a>
+                        <button type="button" id="copyLinkBtn" class="share-modal-btn copy-link">
+                            <i class="fas fa-copy"></i> Copy Link
+                        </button>
+                        <button type="button" id="shareToInnovateHubGroupBtn" class="share-modal-btn innovatehub">
+                            <i class="fas fa-users"></i> Share to InnovateHub Group
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal (NEW) -->
+    <div class="modal fade" id="settingsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-cog me-2"></i>Settings</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <h6 class="mb-3"><i class="fas fa-paint-brush me-2 text-primary"></i>Appearance</h6>
+                    <div class="form-check form-switch mb-4 d-flex justify-content-between align-items-center">
+                        <label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
+                        <label class="theme-switch">
+                            <input type="checkbox" id="darkModeSwitch">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <h6 class="mb-3"><i class="fas fa-eye-slash me-2 text-primary"></i>Content Visibility</h6>
+                    <div class="form-check form-switch mb-4 d-flex justify-content-between align-items-center">
+                        <label class="form-check-label" for="showTrendingTopicsSwitch">Show Trending Topics</label>
+                        <label class="theme-switch" style="width: 45px; height: 25px;">
+                            <input type="checkbox" id="showTrendingTopicsSwitch">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h6 class="mb-3"><i class="fas fa-user-circle me-2 text-primary"></i>Profile Information</h6>
+                    <form id="profileUpdateForm">
+                        <div class="mb-3">
+                            <label for="settingsName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="settingsName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="settingsCourse" class="form-label">Course/Department</label>
+                            <input type="text" class="form-control" id="settingsCourse" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="settingsCollege" class="form-label">College</label>
+                            <select class="form-select" id="settingsCollege" required>
+                                <option value="bvb">BVB College of Engineering</option>
+                                <option value="kit">KLE Institute of Technology</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-gradient w-100">
+                            <i class="fas fa-save me-2"></i>Save Profile
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script>
-        // API Configuration - Make sure this matches your backend URL
-        const API_BASE_URL = 'http://localhost:3000/api';
+        console.log('InnovateHub script loading...');
+
+        // API Configuration - UPDATED TO YOUR LIVE RENDER URL
+        const API_BASE_URL = 'https://nexushub-939w.onrender.com/api';
         
         // Global State
         let currentUser = null;
         let posts = [];
-        let notes = []; // Array to store user's notes
-        let deadlines = []; // Array to store user's deadlines
-        let studyGroups = []; // Array to store study groups
+        let notes = [];
+        let deadlines = [];
+        let studyGroups = [];
         let authToken = null;
+        let currentGroupChatId = null;
+
+        // New: User Settings State
+        let userSettings = {
+            darkMode: false,
+            showTrending: true,
+        };
+
+        // Modal Instances - declared here for global access
+        // They will be initialized inside DOMContentLoaded to ensure elements exist
+        let loginModal, signupModal, createNoteModal, editNoteModal, confirmModal, createDeadlineModal, createGroupModal, groupChatModal, settingsModal, sharePostModal; 
 
         // API Helper Functions
         async function apiCall(endpoint, options = {}) {
@@ -979,15 +1574,14 @@
 
             try {
                 const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-                const data = await response.json();
-                
                 if (!response.ok) {
-                    throw new Error(data.message || response.statusText || 'API call failed');
+                    const errorData = await response.json().catch(() => ({ message: response.statusText }));
+                    throw new Error(errorData.message || response.statusText || 'API call failed');
                 }
-                
+                const data = await response.json();
                 return data;
             } catch (error) {
-                console.error('API Error:', endpoint, error);
+                console.error(`FRONTEND ERROR: API call to ${endpoint} failed:`, error);
                 showToast(error.message || 'Network error occurred', 'error');
                 throw error;
             }
@@ -995,16 +1589,103 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded fired.');
+
+            // Initialize all modals here, ensuring elements exist
+            loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            signupModal = new bootstrap.Modal(document.getElementById('signupModal'));
+            createNoteModal = new bootstrap.Modal(document.getElementById('createNoteModal'));
+            editNoteModal = new bootstrap.Modal(document.getElementById('editNoteModal'));
+            confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            createDeadlineModal = new bootstrap.Modal(document.getElementById('createDeadlineModal'));
+            createGroupModal = new bootstrap.Modal(document.getElementById('createGroupModal'));
+            groupChatModal = new bootstrap.Modal(document.getElementById('groupChatModal'));
+            settingsModal = new bootstrap.Modal(document.getElementById('settingsModal'));
+            sharePostModal = new bootstrap.Modal(document.getElementById('sharePostModal')); // Initialize new share modal
+
             // Event Listeners for Forms
             document.getElementById('loginForm').addEventListener('submit', handleLogin);
             document.getElementById('signupForm').addEventListener('submit', handleSignup);
             document.getElementById('createPostForm').addEventListener('submit', handleCreatePost);
             document.getElementById('createNoteForm').addEventListener('submit', handleCreateNote);
+            document.getElementById('editNoteForm').addEventListener('submit', handleEditNote);
             document.getElementById('createDeadlineForm').addEventListener('submit', handleCreateDeadline);
             document.getElementById('createGroupForm').addEventListener('submit', handleCreateGroup);
             document.getElementById('searchInput').addEventListener('input', handleSearch);
-            
-            // Check for saved auth token
+
+            // Group Chat Listeners
+            document.getElementById('sendMessageBtn').addEventListener('click', handleSendMessage);
+            document.getElementById('chatMessageInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSendMessage();
+                }
+            });
+            // Changed chatFile.addEventListener to point directly to handleSendMessage
+            document.getElementById('chatFileButton').addEventListener('click', () => document.getElementById('chatFile').click());
+            document.getElementById('chatFile').addEventListener('change', handleSendMessage);
+
+            // Post file buttons
+            document.getElementById('postImageButton').addEventListener('click', () => document.getElementById('postFile').click());
+            document.getElementById('postFileButton').addEventListener('click', () => document.getElementById('postFile').click());
+
+
+            // NEW: Settings Listeners
+            document.getElementById('darkModeSwitch').addEventListener('change', toggleDarkMode);
+            document.getElementById('showTrendingTopicsSwitch').addEventListener('change', toggleTrendingTopics);
+            document.getElementById('profileUpdateForm').addEventListener('submit', handleProfileUpdate);
+
+            // NEW: Added event listeners for hero section buttons and navbar links
+            const getStartedButton = document.getElementById('getStartedButton');
+            if (getStartedButton) {
+                getStartedButton.addEventListener('click', showLoginModal);
+            }
+            const joinNowButton = document.getElementById('joinNowButton');
+            if (joinNowButton) {
+                joinNowButton.addEventListener('click', showLoginModal);
+            }
+
+            // Navbar links
+            document.getElementById('navbarBrandLink')?.addEventListener('click', () => showSection('home'));
+            document.getElementById('navHomeLink')?.addEventListener('click', () => showSection('home'));
+            document.getElementById('navNotesLink')?.addEventListener('click', () => showSection('notes'));
+            document.getElementById('navDeadlinesLink')?.addEventListener('click', () => showSection('deadlines'));
+            document.getElementById('navGroupsLink')?.addEventListener('click', () => showSection('groups'));
+
+            // Login/Signup modal links
+            document.getElementById('signupLink')?.addEventListener('click', (e) => { e.preventDefault(); showSignupModal(); });
+            document.getElementById('loginLink')?.addEventListener('click', (e) => { e.preventDefault(); showLoginModal(); });
+
+            // Buttons that open modals
+            document.getElementById('newNoteButton')?.addEventListener('click', showCreateNoteModal);
+            document.getElementById('addDeadlineButton')?.addEventListener('click', showCreateDeadlineModal);
+            document.getElementById('createGroupButton')?.addEventListener('click', showCreateGroupModal);
+
+            // Group type filter buttons (remove inline onclick for consistency)
+            document.getElementById('btnAllGroups')?.addEventListener('click', () => {
+                fetchStudyGroups();
+                document.getElementById('btnAllGroups').classList.add('active');
+                document.getElementById('btnMyGroups').classList.remove('active');
+            });
+            document.getElementById('btnMyGroups')?.addEventListener('click', () => {
+                fetchStudyGroups(true);
+                document.getElementById('btnMyGroups').classList.add('active');
+                document.getElementById('btnAllGroups').classList.remove('active');
+            });
+
+            // Share Modal Button Listeners (Delegated listeners or added inside showShareOptions)
+            document.getElementById('copyLinkBtn').addEventListener('click', () => copyPostLink(document.getElementById('shareWhatsapp').href));
+            document.getElementById('shareToInnovateHubGroupBtn').addEventListener('click', () => {
+                // Assuming the post URL is still relevant from the last opened share modal
+                const postUrl = document.getElementById('shareWhatsapp').href; 
+                // Extract postId from URL for a more robust solution, or pass it via data attribute
+                const urlParts = postUrl.split('/');
+                const postId = urlParts[urlParts.length - 1]; // This is a simplistic extraction
+                shareToInnovateHubGroup(postId);
+            });
+
+
+            // Check for saved auth token and load user profile
             const savedToken = window.localStorage?.getItem('authToken');
             if (savedToken) {
                 authToken = savedToken;
@@ -1012,6 +1693,9 @@
             } else {
                 showHeroSection(); // Show hero section if no token
             }
+
+            // NEW: Load and apply saved settings
+            loadSettings();
         });
 
         // Authentication Functions
@@ -1034,9 +1718,10 @@
                     window.localStorage.setItem('authToken', authToken);
                 }
 
-                bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+                loginModal.hide(); // Use the initialized modal instance
                 showSection('home'); // Show default section (posts) after login
                 updateUserActions();
+                updateSidebarProfile(); // Ensure profile is updated after login
                 showToast('Welcome back! 🎉', 'success');
             } catch (error) {
                 showToast('Login failed: ' + error.message, 'error');
@@ -1057,7 +1742,7 @@
                     body: JSON.stringify({ name, email, password, course, college })
                 });
 
-                bootstrap.Modal.getInstance(document.getElementById('signupModal')).hide();
+                signupModal.hide(); // Use the initialized modal instance
                 showToast('Account created successfully! Please login.', 'success');
                 showLoginModal();
             } catch (error) {
@@ -1076,7 +1761,7 @@
                 fetchPosts();
                 fetchDeadlines(); // Load for sidebar (main deadlines section calls fetchDeadlines(true))
                 fetchStudyGroups(); // Load for sidebar (main groups section calls fetchStudyGroups())
-                fetchTrendingTopics(); // Still mock data, but keep loading
+                fetchTrendingTopics(); // Now uses backend
             } catch (error) {
                 console.error('Failed to load user profile:', error);
                 handleLogout(); // Clear invalid token and show hero section
@@ -1090,6 +1775,7 @@
             window.localStorage?.removeItem('authToken');
             showHeroSection();
             updateUserActions();
+            updateSidebarProfile(); // Clear sidebar profile on logout
             showToast('Logged out successfully.', 'success');
         }
 
@@ -1175,18 +1861,24 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                             <li><a class="dropdown-item" href="#"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><a class="dropdown-item" href="#" id="settingsLink"><i class="fas fa-cog me-2"></i>Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            <li><a class="dropdown-item text-danger" href="#" id="logoutLink"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </div>
                 `;
                 document.querySelector('.navbar-brand').style.pointerEvents = 'auto';
+                // Add event listeners for new elements in dropdown
+                document.getElementById('settingsLink')?.addEventListener('click', (e) => { e.preventDefault(); showSettingsModal(); });
+                document.getElementById('logoutLink')?.addEventListener('click', (e) => { e.preventDefault(); handleLogout(); });
+
             } else {
                 userActionsDiv.innerHTML = `
-                    <button class="btn-gradient pulse-glow" onclick="showLoginModal()">Join Now</button>
+                    <button class="btn-gradient pulse-glow" id="joinNowButton">Join Now</button>
                 `;
                 document.querySelector('.navbar-brand').style.pointerEvents = 'none';
+                // Re-add listener for the "Join Now" button when it's re-rendered
+                document.getElementById('joinNowButton')?.addEventListener('click', showLoginModal);
             }
         }
 
@@ -1203,30 +1895,44 @@
                 document.getElementById('userFollowers').textContent = currentUser.followersCount || 0;
             } else {
                 // Reset to defaults if no user logged in
-                document.getElementById('userAvatar').textContent = 'JD';
-                document.getElementById('userName').textContent = 'John Doe';
-                document.getElementById('userCourse').textContent = 'Computer Science';
+                document.getElementById('userAvatar').textContent = 'IH'; // InnovateHub initials
+                document.getElementById('userName').textContent = 'Guest User';
+                document.getElementById('userCourse').textContent = 'N/A';
                 document.getElementById('userPosts').textContent = '0';
                 document.getElementById('userFollowers').textContent = '0';
             }
         }
 
-        // Modal Instances
-        let loginModal, signupModal, createNoteModal, createDeadlineModal, createGroupModal;
-        document.addEventListener('DOMContentLoaded', () => {
-            loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-            signupModal = new bootstrap.Modal(document.getElementById('signupModal'));
-            createNoteModal = new bootstrap.Modal(document.getElementById('createNoteModal'));
-            createDeadlineModal = new bootstrap.Modal(document.getElementById('createDeadlineModal'));
-            createGroupModal = new bootstrap.Modal(document.getElementById('createGroupModal'));
-        });
-
-        // Modal Show/Hide Helpers
-        function showLoginModal() { signupModal.hide(); loginModal.show(); }
-        function showSignupModal() { loginModal.hide(); signupModal.show(); }
+        // Modal Show/Hide Helpers (now using globally initialized instances)
+        function showLoginModal() { 
+            console.log("Attempting to show login modal...");
+            loginModal.show(); 
+        }
+        function showSignupModal() { 
+            console.log("Attempting to show signup modal...");
+            // If login modal is open, hide it first
+            if (loginModal) loginModal.hide();
+            signupModal.show(); 
+        }
         function showCreateNoteModal() { createNoteModal.show(); }
+        function showEditNoteModal() { editNoteModal.show(); }
         function showCreateDeadlineModal() { createDeadlineModal.show(); }
         function showCreateGroupModal() { createGroupModal.show(); }
+        function showGroupChatModal() { groupChatModal.show(); }
+        function showSharePostModal() { sharePostModal.show(); } // New helper for share modal
+        // NEW: Show Settings Modal and populate profile fields
+        function showSettingsModal() {
+            if (currentUser) {
+                document.getElementById('settingsName').value = currentUser.name;
+                document.getElementById('settingsCourse').value = currentUser.course;
+                document.getElementById('settingsCollege').value = currentUser.college;
+            }
+            // Update the state of the toggles based on current userSettings
+            document.getElementById('darkModeSwitch').checked = userSettings.darkMode;
+            document.getElementById('showTrendingTopicsSwitch').checked = userSettings.showTrending;
+
+            settingsModal.show();
+        }
 
         // Toast Notifications
         function showToast(message, type = 'info') {
@@ -1250,7 +1956,89 @@
             toast.addEventListener('hidden.bs.toast', () => toast.remove());
         }
 
-        // --- POST FUNCTIONS (Existing, refined with file upload) ---
+        // --- NEW: SETTINGS FUNCTIONALITY ---
+        function loadSettings() {
+            const savedSettings = window.localStorage?.getItem('userSettings');
+            if (savedSettings) {
+                userSettings = JSON.parse(savedSettings);
+            } else {
+                // Set default settings if none saved
+                userSettings = {
+                    darkMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches, // Default to system preference
+                    showTrending: true,
+                };
+            }
+            applyTheme(userSettings.darkMode);
+            // Ensure the checkbox states match the loaded settings immediately
+            if (document.getElementById('darkModeSwitch')) {
+                document.getElementById('darkModeSwitch').checked = userSettings.darkMode;
+            }
+            if (document.getElementById('showTrendingTopicsSwitch')) {
+                 document.getElementById('showTrendingTopicsSwitch').checked = userSettings.showTrending;
+            }
+            toggleTrendingTopics(null, userSettings.showTrending); // Pass explicit state, not an event
+        }
+
+        function saveSettings() {
+            window.localStorage?.setItem('userSettings', JSON.stringify(userSettings));
+        }
+
+        function applyTheme(isDark) {
+            const htmlTag = document.documentElement;
+            if (isDark) {
+                htmlTag.setAttribute('data-theme', 'dark');
+            } else {
+                htmlTag.setAttribute('data-theme', 'light');
+            }
+        }
+
+        function toggleDarkMode(event) {
+            // If event is null, it means we are applying settings from localStorage
+            userSettings.darkMode = event ? event.target.checked : userSettings.darkMode;
+            applyTheme(userSettings.darkMode);
+            saveSettings();
+        }
+
+        function toggleTrendingTopics(event, explicitState = null) {
+            const trendingTopicsCard = document.getElementById('trendingTopicsCard');
+            if (trendingTopicsCard) { // Guard against element not existing if hidden by settings
+                if (explicitState !== null) {
+                    userSettings.showTrending = explicitState;
+                } else {
+                    userSettings.showTrending = event.target.checked;
+                }
+                trendingTopicsCard.style.display = userSettings.showTrending ? 'block' : 'none';
+                saveSettings();
+            }
+        }
+
+        async function handleProfileUpdate(e) {
+            e.preventDefault();
+            if (!currentUser) { showToast('Please login to update your profile.', 'info'); showLoginModal(); return; }
+
+            const name = document.getElementById('settingsName').value;
+            const course = document.getElementById('settingsCourse').value;
+            const college = document.getElementById('settingsCollege').value;
+
+            try {
+                const response = await apiCall('/auth/profile', {
+                    method: 'PUT',
+                    body: JSON.stringify({ name, course, college })
+                });
+
+                currentUser.name = response.user.name;
+                currentUser.course = response.user.course;
+                currentUser.college = response.user.college;
+                
+                updateSidebarProfile(); // Update displayed profile info
+                settingsModal.hide();
+                showToast('Profile updated successfully! 🎉', 'success');
+            } catch (error) {
+                showToast('Failed to update profile: ' + error.message, 'error');
+            }
+        }
+
+        // --- POST FUNCTIONS --- (rest of the functions are unchanged from previous working version)
         async function handleCreatePost(e) {
             e.preventDefault();
             if (!currentUser) { showToast('Please login to create posts.', 'info'); showLoginModal(); return; }
@@ -1258,7 +2046,7 @@
             const postType = document.getElementById('postType').value;
             const postTitle = document.getElementById('postTitle').value;
             const postContent = document.getElementById('postContent').value;
-            const postFile = document.getElementById('postFile').files[0]; // Get the selected file
+            const postFile = document.getElementById('postFile').files[0];
 
             if (!postType || !postTitle || !postContent) { showToast('Please fill all post fields.', 'error'); return; }
 
@@ -1267,76 +2055,59 @@
             let fileOriginalName = null;
             let fileType = null;
 
-            if (postFile) {
-                // Simple check for file size (e.g., 5MB limit for Base64, adjust as needed)
-                if (postFile.size > 5 * 1024 * 1024) { // 5 MB
-                    showToast('File size exceeds 5MB limit. Please upload a smaller file.', 'error');
-                    return;
-                }
-
-                // Read file as Base64
-                const reader = new FileReader();
-                reader.readAsDataURL(postFile);
-
-                reader.onload = async function() {
-                    fileBase64 = reader.result.split(',')[1]; // Get only the Base64 data part
-                    fileMimeType = postFile.type;
-                    fileOriginalName = postFile.name;
-                    fileType = postFile.type.startsWith('image/') ? 'image' : 'document'; // Categorize file type
-
-                    try {
-                        const newPostData = await apiCall('/posts', {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                type: postType,
-                                title: postTitle,
-                                content: postContent,
-                                fileBase64: fileBase64,
-                                fileMimeType: fileMimeType,
-                                fileOriginalName: fileOriginalName,
-                                fileType: fileType
-                            })
-                        });
-                        posts.unshift(newPostData.post);
-                        renderPosts();
-                        document.getElementById('createPostForm').reset();
-                        document.getElementById('postFile').value = ''; // Clear file input
-                        showToast('Post created successfully! ✨', 'success');
-                        if (currentUser) {
-                            currentUser.postCount = (currentUser.postCount || 0) + 1;
-                            document.getElementById('userPosts').textContent = currentUser.postCount;
-                        }
-                    } catch (error) {
-                        showToast('Failed to create post: ' + error.message, 'error');
-                    }
-                };
-
-                reader.onerror = function(error) {
-                    console.error('Error reading file:', error);
-                    showToast('Failed to read file for upload.', 'error');
-                };
-            } else {
-                // If no file is attached, proceed without file data
+            const submitPost = async () => {
                 try {
                     const newPostData = await apiCall('/posts', {
                         method: 'POST',
                         body: JSON.stringify({
                             type: postType,
                             title: postTitle,
-                            content: postContent
+                            content: postContent,
+                            fileBase64: fileBase64,
+                            fileMimeType: fileMimeType,
+                            fileOriginalName: fileOriginalName,
+                            fileType: fileType
                         })
                     });
                     posts.unshift(newPostData.post);
                     renderPosts();
                     document.getElementById('createPostForm').reset();
+                    document.getElementById('postFile').value = '';
                     showToast('Post created successfully! ✨', 'success');
                     if (currentUser) {
                         currentUser.postCount = (currentUser.postCount || 0) + 1;
                         document.getElementById('userPosts').textContent = currentUser.postCount;
                     }
+                    fetchTrendingTopics();
                 } catch (error) {
+                    console.error('Failed to create post:', error);
                     showToast('Failed to create post: ' + error.message, 'error');
                 }
+            };
+
+            if (postFile) {
+                if (postFile.size > 5 * 1024 * 1024) {
+                    showToast('File size exceeds 5MB limit. Please upload a smaller file.', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.readAsDataURL(postFile);
+
+                reader.onload = async function() {
+                    fileBase64 = reader.result.split(',')[1];
+                    fileMimeType = postFile.type;
+                    fileOriginalName = postFile.name;
+                    fileType = postFile.type.startsWith('image/') ? 'image' : 'document';
+                    await submitPost();
+                };
+
+                reader.onerror = function(error) {
+                    console.error('Error reading file for post upload:', error);
+                    showToast('Failed to read file for upload.', 'error');
+                };
+            } else {
+                await submitPost();
             }
         }
 
@@ -1344,10 +2115,13 @@
             const postsContainer = document.getElementById('postsContainer');
             postsContainer.innerHTML = '<div class="loading-spinner"></div>';
             try {
+                console.log('FRONTEND: Attempting to fetch posts...');
                 const data = await apiCall(`/posts${query ? `?search=${query}` : ''}`);
                 posts = data.posts;
                 renderPosts();
+                console.log('FRONTEND: Posts fetched and rendered successfully.');
             } catch (error) {
+                console.error('FRONTEND ERROR: Failed to load posts:', error);
                 postsContainer.innerHTML = '<p class="text-center text-muted">Failed to load posts. Please try again later.</p>';
             }
         }
@@ -1384,6 +2158,12 @@
                     if (post.fileType === 'image') {
                         fileDisplayHtml = `<img src="${dataUrl}" alt="${post.fileOriginalName}" class="img-fluid rounded-lg my-3" style="max-height: 300px; object-fit: contain; width: 100%; border: 1px solid #eee;">`;
                     } else if (post.fileType === 'document') {
+                        let fileIcon = 'fas fa-file';
+                        if (post.fileMimeType.includes('pdf')) fileIcon = 'fas fa-file-pdf';
+                        else if (post.fileMimeType.includes('word')) fileIcon = 'fas fa-file-word';
+                        else if (post.fileMimeType.includes('excel')) fileIcon = 'fas fa-file-excel';
+                        else if (post.fileMimeType.includes('powerpoint')) fileIcon = 'fas fa-file-powerpoint';
+
                         fileDisplayHtml = `
                             <div class="alert alert-light alert-dismissible fade show d-flex align-items-center justify-content-between p-2 my-3" role="alert">
                                 <div>
@@ -1397,6 +2177,9 @@
                     }
                 }
 
+                // Initial comments array (empty for now, populate from backend if available)
+                const postComments = post.comments || []; 
+
                 postElement.innerHTML = `
                     <div class="p-4">
                         <div class="d-flex align-items-center mb-3">
@@ -1406,27 +2189,47 @@
                                 <small class="text-muted">${post.user ? `${post.user.course} from ${post.user.college}` : 'N/A'}</small>
                             </div>
                             <span class="ms-auto post-type-badge ${typeClass}">${post.type}</span>
+                            ${currentUser && post.user && post.user._id === currentUser._id ? `
+                                <button class="btn btn-sm btn-outline-danger ms-2" onclick="confirmDeletePost('${post._id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : ''}
                         </div>
                         <h4 class="mb-2">${post.title}</h4>
                         <p class="text-muted mb-3">${post.content}</p>
-                        ${fileDisplayHtml} <!-- Insert file/image display HTML here -->
+                        ${fileDisplayHtml}
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <button class="btn-action ${likeButtonClass}" onclick="toggleLike('${post._id}')">
                                     <i class="fas fa-heart"></i> ${likeCount} Likes
                                 </button>
-                                <button class="btn-action">
-                                    <i class="fas fa-comment"></i> ${post.comments || 0} Comments
+                                <button class="btn-action" onclick="toggleCommentsSection('${post._id}')">
+                                    <i class="fas fa-comment"></i> <span id="commentCount-${post._id}">${postComments.length}</span> Comments
                                 </button>
-                                <button class="btn-action">
+                                <button class="btn-action" onclick="showShareOptions('${post._id}', '${encodeURIComponent(post.title)}')">
                                     <i class="fas fa-share"></i> Share
                                 </button>
                             </div>
                             <small class="text-muted">${new Date(post.createdAt).toLocaleDateString()}</small>
                         </div>
+                        
+                        <!-- Comments Section for each post -->
+                        <div id="commentsSection-${post._id}" class="comments-section" style="display: none;">
+                            <h6>Comments</h6>
+                            <div id="commentsContainer-${post._id}" class="mb-3">
+                                <!-- Comments will be dynamically loaded here -->
+                                <p class="text-muted small">No comments yet. Be the first to comment!</p>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="commentInput-${post._id}" placeholder="Write a comment...">
+                                <button class="btn btn-gradient" type="button" onclick="submitComment('${post._id}')">Post</button>
+                            </div>
+                        </div>
                     </div>
                 `;
                 postsContainer.appendChild(postElement);
+                // Call render comments for each post
+                renderCommentsForPost(post._id, postComments); // Render any existing comments
             });
         }
 
@@ -1438,12 +2241,31 @@
                 if (postIndex > -1) {
                     posts[postIndex].likes = response.likes;
                     posts[postIndex].likedBy = Array.isArray(response.likedBy) ? response.likedBy : [];
-                    renderPosts();
+                    renderPosts(); // Re-render all posts to update the like count and button state
                 }
             } catch (error) {
                 showToast('Failed to like post: ' + error.message, 'error');
             }
         }
+
+        // New function to confirm and delete a post
+        function confirmDeletePost(postId) {
+            showCustomConfirm('Are you sure you want to delete this post? This action cannot be undone.', async () => {
+                try {
+                    await apiCall(`/posts/${postId}`, { method: 'DELETE' });
+                    posts = posts.filter(p => p._id !== postId); // Remove deleted post from local array
+                    renderPosts(); // Re-render posts to reflect deletion
+                    showToast('Post deleted successfully!', 'success');
+                    if (currentUser) {
+                        currentUser.postCount = Math.max(0, (currentUser.postCount || 0) - 1);
+                        document.getElementById('userPosts').textContent = currentUser.postCount;
+                    }
+                } catch (error) {
+                    showToast('Failed to delete post: ' + error.message, 'error');
+                }
+            });
+        }
+
 
         let searchTimeout;
         function handleSearch(e) {
@@ -1454,7 +2276,163 @@
             }, 500);
         }
 
-        // --- NOTE FUNCTIONS (New) ---
+        // --- Comments Functionality (Frontend Only - Backend APIs needed for persistence) ---
+        function toggleCommentsSection(postId) {
+            const commentsSection = document.getElementById(`commentsSection-${postId}`);
+            if (commentsSection) {
+                if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+                    commentsSection.style.display = 'block';
+                    // In a real app, you'd fetch comments here if not already loaded
+                    fetchAndRenderComments(postId); 
+                } else {
+                    commentsSection.style.display = 'none';
+                }
+            }
+        }
+
+        async function fetchAndRenderComments(postId) {
+            const commentsContainer = document.getElementById(`commentsContainer-${postId}`);
+            commentsContainer.innerHTML = '<div class="loading-spinner"></div>'; // Show loading spinner
+            try {
+                const data = await apiCall(`/posts/${postId}/comments`);
+                const comments = data.comments;
+                renderCommentsForPost(postId, comments);
+                document.getElementById(`commentCount-${postId}`).textContent = comments.length;
+            } catch (error) {
+                console.error('Failed to fetch comments:', error);
+                commentsContainer.innerHTML = '<p class="text-muted small">Could not load comments.</p>';
+            }
+        }
+
+
+        // Placeholder for submitting a comment (requires backend API)
+        async function submitComment(postId) {
+            if (!currentUser) { showToast('Please login to comment.', 'info'); showLoginModal(); return; }
+
+            const commentInput = document.getElementById(`commentInput-${postId}`);
+            const commentContent = commentInput.value.trim();
+
+            if (!commentContent) {
+                showToast('Comment cannot be empty.', 'error');
+                return;
+            }
+
+            try {
+                // Call the backend API to add the comment
+                const response = await apiCall(`/posts/${postId}/comments`, {
+                    method: 'POST',
+                    body: JSON.stringify({ content: commentContent })
+                });
+
+                // Update local posts array with the new comment and re-render
+                const postIndex = posts.findIndex(p => p._id === postId);
+                if (postIndex > -1) {
+                    // Replace the comments array with the updated one from the backend
+                    posts[postIndex].comments = response.comments; // Assuming backend returns updated comments array
+                    renderCommentsForPost(postId, posts[postIndex].comments); // Re-render comments for this specific post
+                    document.getElementById(`commentCount-${postId}`).textContent = posts[postIndex].comments.length;
+                    commentInput.value = ''; // Clear input
+                    showToast('Comment posted! 🎉', 'success');
+                }
+            } catch (error) {
+                showToast('Failed to post comment: ' + error.message, 'error');
+            }
+        }
+
+        // Function to render comments for a specific post
+        function renderCommentsForPost(postId, comments) {
+            const commentsContainer = document.getElementById(`commentsContainer-${postId}`);
+            if (!commentsContainer) return;
+
+            commentsContainer.innerHTML = ''; // Clear existing comments
+
+            if (comments.length === 0) {
+                commentsContainer.innerHTML = '<p class="text-muted small">No comments yet. Be the first to comment!</p>';
+                return;
+            }
+
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.classList.add('comment-item');
+                commentElement.innerHTML = `
+                    <div class="comment-avatar">${comment.user ? comment.user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '??'}</div>
+                    <div class="comment-content-wrapper">
+                        <div class="comment-author">${comment.user ? comment.user.name : 'Unknown User'}</div>
+                        <p class="comment-text">${comment.content}</p>
+                        <div class="comment-time">${new Date(comment.createdAt).toLocaleString()}</div>
+                    </div>
+                `;
+                // Add delete button for comments if current user is the owner of the comment or the post
+                const post = posts.find(p => p._id === postId);
+                if (currentUser && comment.user && (comment.user._id === currentUser._id || (post && post.user && post.user._id === currentUser._id))) {
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('btn', 'btn-sm', 'btn-link', 'text-danger', 'ms-2');
+                    deleteButton.innerHTML = '<i class="fas fa-times-circle"></i>';
+                    deleteButton.setAttribute('title', 'Delete Comment');
+                    deleteButton.onclick = () => confirmDeletePostComment(postId, comment._id);
+                    commentElement.querySelector('.comment-content-wrapper').appendChild(deleteButton);
+                }
+                commentsContainer.appendChild(commentElement);
+            });
+        }
+
+        // New function to confirm and delete a comment
+        function confirmDeletePostComment(postId, commentId) {
+            showCustomConfirm('Are you sure you want to delete this comment?', async () => {
+                try {
+                    await apiCall(`/posts/${postId}/comments/${commentId}`, { method: 'DELETE' });
+                    // After successful deletion, re-fetch and re-render comments for the specific post
+                    fetchAndRenderComments(postId);
+                    showToast('Comment deleted successfully!', 'success');
+                } catch (error) {
+                    showToast('Failed to delete comment: ' + error.message, 'error');
+                }
+            });
+        }
+
+
+        // --- Share Functionality ---
+        function showShareOptions(postId, postTitleEncoded) {
+            if (!currentUser) { showToast('Please login to share posts.', 'info'); showLoginModal(); return; }
+
+            const postTitle = decodeURIComponent(postTitleEncoded);
+            // Construct a dummy URL for the post (in a real app, this would be a permalink to the post)
+            const postUrl = `${window.location.origin}/posts/${postId}`; // Example permalink
+            
+            document.getElementById('shareWhatsapp').href = `https://wa.me/?text=${encodeURIComponent(postTitle)}%20${encodeURIComponent(postUrl)}`;
+            document.getElementById('shareFacebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+            document.getElementById('shareLinkedin').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(postUrl)}&title=${encodeURIComponent(postTitle)}&summary=&source=InnovateHub`;
+
+            // Store post ID for InnovateHub group sharing if needed
+            document.getElementById('shareToInnovateHubGroupBtn').dataset.postId = postId;
+
+            showSharePostModal();
+        }
+
+        function copyPostLink(postUrl) {
+            // Using document.execCommand('copy') as navigator.clipboard.writeText() might not work in some iframe environments
+            const tempInput = document.createElement('textarea');
+            tempInput.value = postUrl;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('Post link copied to clipboard! 🎉', 'success');
+            sharePostModal.hide();
+        }
+
+        // Placeholder for sharing to an InnovateHub group (requires further development)
+        function shareToInnovateHubGroup(postId) {
+            if (!currentUser) { showToast('Please login to share to groups.', 'info'); showLoginModal(); return; }
+            showToast(`Sharing post ${postId} to an InnovateHub group is not yet fully implemented. This would require selecting a group and sending a message to its chat with the post link.`, 'info');
+            sharePostModal.hide();
+            // Future implementation could involve:
+            // 1. Opening a new modal showing a list of user's groups.
+            // 2. User selects a group.
+            // 3. API call to /groups/:groupId/messages with the post link.
+        }
+
+        // --- Notes Functionality (rest of the functions are unchanged) ---
         async function handleCreateNote(e) {
             e.preventDefault();
             if (!currentUser) { showToast('Please login to create notes.', 'info'); showLoginModal(); return; }
@@ -1482,10 +2460,13 @@
             const myNotesContainer = document.getElementById('myNotesContainer');
             myNotesContainer.innerHTML = '<div class="loading-spinner"></div>';
             try {
+                console.log('FRONTEND: Attempting to fetch notes...');
                 const data = await apiCall('/notes');
                 notes = data.notes;
                 renderNotes();
+                console.log('FRONTEND: Notes fetched and rendered successfully.');
             } catch (error) {
+                console.error('FRONTEND ERROR: Failed to load notes:', error);
                 myNotesContainer.innerHTML = '<p class="text-center text-muted">No notes found. Create your first note!</p>';
             }
         }
@@ -1501,16 +2482,16 @@
 
             notes.forEach(note => {
                 const noteElement = document.createElement('div');
-                noteElement.classList.add('note-card', 'mb-3', 'p-3', 'fade-in');
+                noteElement.classList.add('note-card', 'mb-3', 'p-3', 'fade-in'); // Corrected class from '1-3' to 'p-3'
                 noteElement.innerHTML = `
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="mb-0">${note.title}</h5>
                         <div class="note-actions">
                             <button class="btn btn-sm btn-outline-secondary me-1" onclick="editNote('${note._id}')">
-                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-edit"></i> Edit
                             </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteNote('${note._id}')">
-                                <i class="fas fa-trash"></i>
+                            <button class="btn btn-sm btn-outline-danger" onclick="confirmDeleteNote('${note._id}')">
+                                <i class="fas fa-trash"></i> Delete
                             </button>
                         </div>
                     </div>
@@ -1525,23 +2506,102 @@
         }
         
         async function editNote(noteId) {
-            showToast('Edit functionality for notes is coming soon!', 'info');
+            const noteToEdit = notes.find(note => note._id === noteId);
+            if (!noteToEdit) {
+                showToast('Note not found for editing.', 'error');
+                return;
+            }
+
+            document.getElementById('editNoteId').value = noteToEdit._id;
+            document.getElementById('editNoteTitle').value = noteToEdit.title;
+            document.getElementById('editNoteContent').value = noteToEdit.content;
+            document.getElementById('editNoteTags').value = noteToEdit.tags.join(', ');
+
+            editNoteModal.show();
         }
 
-        async function deleteNote(noteId) {
-            if (!confirm('Are you sure you want to delete this note?')) { return; }
+        async function handleEditNote(e) {
+            e.preventDefault();
+            if (!currentUser) { showToast('Please login to edit notes.', 'info'); showLoginModal(); return; }
+
+            const noteId = document.getElementById('editNoteId').value;
+            const title = document.getElementById('editNoteTitle').value;
+            const content = document.getElementById('editNoteContent').value;
+            const tags = document.getElementById('editNoteTags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+
             try {
-                await apiCall(`/notes/${noteId}`, { method: 'DELETE' });
-                notes = notes.filter(note => note._id !== noteId);
+                const updatedNoteData = await apiCall(`/notes/${noteId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ title, content, tags })
+                });
+                
+                const noteIndex = notes.findIndex(note => note._id === noteId);
+                if (noteIndex > -1) {
+                    notes[noteIndex] = updatedNoteData.note;
+                }
                 renderNotes();
-                showToast('Note deleted successfully!', 'success');
+                editNoteModal.hide();
+                showToast('Note updated successfully! ✅', 'success');
             } catch (error) {
-                showToast('Failed to delete note: ' + error.message, 'error');
+                showToast('Failed to update note: ' + error.message, 'error');
             }
         }
 
+        function confirmDeleteNote(noteId) {
+            showCustomConfirm('Are you sure you want to delete this note?', async () => {
+                try {
+                    await apiCall(`/notes/${noteId}`, { method: 'DELETE' });
+                    notes = notes.filter(note => note._id !== noteId);
+                    renderNotes();
+                    showToast('Note deleted successfully!', 'success');
+                } catch (error) {
+                    showToast('Failed to delete note: ' + error.message, 'error');
+                }
+            });
+        }
 
-        // --- DEADLINE FUNCTIONS (New) ---
+        function confirmDeleteDeadline(deadlineId) {
+            showCustomConfirm('Are you sure you want to delete this deadline?', async () => {
+                try {
+                    await apiCall(`/deadlines/${deadlineId}`, { method: 'DELETE' });
+                    deadlines = deadlines.filter(d => d._id !== deadlineId);
+                    renderDeadlines(true);
+                    fetchDeadlines(); // Refresh sidebar deadlines
+                    showToast('Deadline deleted successfully!', 'success');
+                } catch (error) {
+                    showToast('Failed to delete deadline: ' + error.message, 'error');
+                }
+            });
+        }
+
+        function confirmDeleteGroup(groupId) {
+            showCustomConfirm('Are you sure you want to delete this group? This action cannot be undone.', async () => {
+                try {
+                    await apiCall(`/groups/${groupId}`, { method: 'DELETE' });
+                    studyGroups = studyGroups.filter(g => g._id !== groupId);
+                    renderStudyGroups();
+                    fetchStudyGroups();
+                    showToast('Group deleted successfully!', 'success');
+                } catch (error) {
+                    showToast('Failed to delete group: ' + error.message, 'error');
+                }
+            });
+        }
+
+        function showCustomConfirm(message, onConfirm) {
+            document.getElementById('confirmMessage').textContent = message;
+            // Ensure any previous click handlers are removed to prevent multiple calls
+            const proceedBtn = document.getElementById('confirmProceedBtn');
+            const newProceedBtn = proceedBtn.cloneNode(true);
+            proceedBtn.parentNode.replaceChild(newProceedBtn, proceedBtn);
+
+            newProceedBtn.addEventListener('click', () => {
+                confirmModal.hide();
+                onConfirm();
+            });
+            confirmModal.show();
+        }
+
         async function handleCreateDeadline(e) {
             e.preventDefault();
             if (!currentUser) { showToast('Please login to add deadlines.', 'info'); showLoginModal(); return; }
@@ -1560,8 +2620,8 @@
                     body: JSON.stringify({ title, description, dueDate, type, isPublic })
                 });
                 deadlines.unshift(newDeadlineData.deadline);
-                renderDeadlines(true); // Re-render main deadlines section
-                fetchDeadlines(); // Refresh sidebar deadlines
+                renderDeadlines(true);
+                fetchDeadlines();
                 document.getElementById('createDeadlineForm').reset();
                 createDeadlineModal.hide();
                 showToast('Deadline added successfully! 🗓️', 'success');
@@ -1574,6 +2634,7 @@
             const container = forMainSection ? document.getElementById('allDeadlinesContainer') : document.getElementById('deadlinesList');
             container.innerHTML = '<div class="loading-spinner"></div>';
             try {
+                console.log('FRONTEND: Attempting to fetch deadlines...');
                 const data = await apiCall('/deadlines');
                 const fetchedDeadlines = data.deadlines;
 
@@ -1584,8 +2645,10 @@
                     const upcoming = fetchedDeadlines.filter(d => new Date(d.dueDate) >= new Date()).slice(0, 5);
                     renderSidebarDeadlines(upcoming);
                 }
+                console.log('FRONTEND: Deadlines fetched and rendered successfully.');
             } catch (error) {
-                container.innerHTML = '<p class="text-muted small">No upcoming deadlines.</p>';
+                console.error('FRONTEND ERROR: Failed to load deadlines:', error);
+                container.innerHTML = '<p class="text-muted small">No upcoming deadlines or failed to load.</p>';
             }
         }
 
@@ -1609,9 +2672,9 @@
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="mb-0">${deadline.title}</h5>
                         <div class="deadline-actions">
-                            ${deadline.user === currentUser._id ? `
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteDeadline('${deadline._id}')">
-                                    <i class="fas fa-trash"></i>
+                            ${currentUser && deadline.user === currentUser._id ? `
+                                <button class="btn btn-sm btn-outline-danger" onclick="confirmDeleteDeadline('${deadline._id}')">
+                                    <i class="fas fa-trash"></i> Delete
                                 </button>
                             ` : ''}
                         </div>
@@ -1647,21 +2710,6 @@
             });
         }
 
-        async function deleteDeadline(deadlineId) {
-            if (!confirm('Are you sure you want to delete this deadline?')) { return; }
-            try {
-                await apiCall(`/deadlines/${deadlineId}`, { method: 'DELETE' });
-                deadlines = deadlines.filter(d => d._id !== deadlineId);
-                renderDeadlines(true);
-                fetchDeadlines();
-                showToast('Deadline deleted successfully!', 'success');
-            } catch (error) {
-                showToast('Failed to delete deadline: ' + error.message, 'error');
-            }
-        }
-
-
-        // --- STUDY GROUP FUNCTIONS (New) ---
         async function handleCreateGroup(e) {
             e.preventDefault();
             if (!currentUser) { showToast('Please login to create groups.', 'info'); showLoginModal(); return; }
@@ -1694,6 +2742,7 @@
             sidebarStudyGroupsList.innerHTML = '<div class="loading-spinner"></div>';
 
             try {
+                console.log('FRONTEND: Attempting to fetch study groups...');
                 const endpoint = myGroupsOnly ? '/groups?myGroups=true' : '/groups';
                 const data = await apiCall(endpoint);
                 studyGroups = data.groups;
@@ -1702,16 +2751,10 @@
 
                 const sidebarGroups = data.groups.slice(0, 5);
                 renderSidebarStudyGroups(sidebarGroups);
-
-                if (myGroupsOnly) {
-                    document.getElementById('btnMyGroups').classList.add('active');
-                    document.getElementById('btnAllGroups').classList.remove('active');
-                } else {
-                    document.getElementById('btnAllGroups').classList.add('active');
-                    document.getElementById('btnMyGroups').classList.remove('active');
-                }
+                console.log('FRONTEND: Study groups fetched and rendered successfully.');
 
             } catch (error) {
+                console.error('FRONTEND ERROR: Failed to load study groups:', error);
                 studyGroupsContainer.innerHTML = '<p class="text-center text-muted">No study groups found. Be the first to create one!</p>';
                 sidebarStudyGroupsList.innerHTML = '<p class="text-muted small">No active study groups.</p>';
             }
@@ -1730,16 +2773,16 @@
                 const groupElement = document.createElement('div');
                 groupElement.classList.add('group-card', 'mb-3', 'p-3', 'fade-in');
 
-                const isMember = group.members.includes(currentUser._id);
-                const isCreator = group.creator._id === currentUser._id;
+                const isMember = currentUser && group.members.some(m => m._id === currentUser._id);
+                const isCreator = currentUser && group.creator && group.creator._id === currentUser._id;
 
                 groupElement.innerHTML = `
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="mb-0">${group.name}</h5>
+                        <h5 class="mb-0">${group.name} ${isCreator ? '<span class="badge bg-primary ms-2">Admin</span>' : ''}</h5>
                         <div class="group-actions">
                             ${isCreator ? `
-                                <button class="btn btn-sm btn-outline-danger me-1" onclick="deleteGroup('${group._id}')">
-                                    <i class="fas fa-trash"></i>
+                                <button class="btn btn-sm btn-outline-danger" onclick="confirmDeleteGroup('${group._id}')">
+                                    <i class="fas fa-trash"></i> Delete
                                 </button>
                             ` : ''}
                             ${!isCreator && !isMember ? `
@@ -1755,11 +2798,16 @@
                         </div>
                     </div>
                     <p class="text-muted small">${group.description || 'No description provided.'}</p>
-                    <small class="d-block mt-2">Creator: <span class="fw-bold">${group.creator.name}</span></small>
+                    <small class="d-block mt-2">Creator: <span class="fw-bold">${group.creator ? group.creator.name : 'Unknown'}</span></small>
                     <small class="d-block mt-1">Members: <span class="badge bg-info">${group.members.length}</span></small>
                     <div class="d-flex flex-wrap gap-1 mt-2">
                         ${group.tags.map(tag => `<span class="badge bg-light text-secondary">${tag}</span>`).join('')}
                     </div>
+                    ${isMember ? `
+                        <button class="btn btn-sm btn-outline-primary mt-3 w-100" onclick="openGroupChat('${group._id}')">
+                            <i class="fas fa-comments me-1"></i> Open Chat
+                        </button>
+                    ` : ''}
                 `;
                 studyGroupsContainer.appendChild(groupElement);
             });
@@ -1776,7 +2824,7 @@
                 const groupElement = document.createElement('div');
                 groupElement.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-2');
                 groupElement.innerHTML = `
-                    <a href="#" class="text-decoration-none text-dark fw-medium">${group.name}</a>
+                    <a href="#" class="text-decoration-none text-dark fw-medium" onclick="openGroupChat('${group._id}')">${group.name}</a>
                     <span class="badge bg-info text-white">${group.members.length} Members</span>
                 `;
                 studyGroupsList.appendChild(groupElement);
@@ -1789,10 +2837,12 @@
                 const response = await apiCall(`/groups/${groupId}/join`, { method: 'POST' });
                 const groupIndex = studyGroups.findIndex(g => g._id === groupId);
                 if (groupIndex > -1) {
-                    studyGroups[groupIndex].members = response.group.members;
-                    renderStudyGroups();
-                    fetchStudyGroups();
+                    studyGroups[groupIndex] = response.group;
+                } else {
+                    studyGroups.push(response.group);
                 }
+                renderStudyGroups();
+                fetchStudyGroups(true);
                 showToast('Joined group successfully!', 'success');
             } catch (error) {
                 showToast('Failed to join group: ' + error.message, 'error');
@@ -1805,46 +2855,202 @@
                 const response = await apiCall(`/groups/${groupId}/leave`, { method: 'POST' });
                 const groupIndex = studyGroups.findIndex(g => g._id === groupId);
                 if (groupIndex > -1) {
-                    studyGroups[groupIndex].members = response.group.members;
-                    renderStudyGroups();
-                    fetchStudyGroups();
+                    studyGroups[groupIndex] = response.group;
                 }
+                renderStudyGroups();
+                fetchStudyGroups(true);
                 showToast('Left group successfully.', 'success');
             } catch (error) {
                 showToast('Failed to leave group: ' + error.message, 'error');
             }
         }
 
-        async function deleteGroup(groupId) {
-            if (!confirm('Are you sure you want to delete this group? This action cannot be undone.')) { return; }
+        async function openGroupChat(groupId) {
+            if (!currentUser) {
+                showToast('Please login to join chats.', 'info');
+                showLoginModal();
+                return;
+            }
+
+            currentGroupChatId = groupId;
+            document.getElementById('groupChatMessages').innerHTML = '<div class="loading-spinner"></div>';
+            document.getElementById('chatMessageInput').value = '';
+            document.getElementById('chatFile').value = '';
+
             try {
-                await apiCall(`/groups/${groupId}`, { method: 'DELETE' });
-                studyGroups = studyGroups.filter(g => g._id !== groupId);
-                renderStudyGroups();
-                fetchStudyGroups();
-                showToast('Group deleted successfully!', 'success');
+                console.log(`FRONTEND: Attempting to open chat for group ${groupId}...`);
+                const groupData = await apiCall(`/groups/${groupId}`);
+                const group = groupData.group;
+
+                document.getElementById('groupChatTitle').textContent = `Chat: ${group.name}`;
+                renderGroupMessages(group.messages, group.creator._id);
+                showGroupChatModal();
+                console.log(`FRONTEND: Chat for group ${groupId} opened successfully.`);
+
             } catch (error) {
-                showToast('Failed to delete group: ' + error.message, 'error');
+                console.error('FRONTEND ERROR: Failed to open group chat:', error);
+                showToast('Failed to open chat: ' + error.message, 'error');
+                groupChatModal.hide();
             }
         }
 
-        // --- Mock Data Functions (Existing, kept for trending topics) ---
+        function renderGroupMessages(messages, groupCreatorId) {
+            const messagesDiv = document.getElementById('groupChatMessages');
+            messagesDiv.innerHTML = '';
+
+            if (messages.length === 0) {
+                messagesDiv.innerHTML = '<p class="text-center text-muted">No messages yet. Start the conversation!</p>';
+                return;
+            }
+
+            messages.forEach(message => {
+                const isMyMessage = currentUser && message.sender && message.sender._id === currentUser._id;
+                const isGroupAdmin = currentUser && groupCreatorId === currentUser._id;
+
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chat-message', isMyMessage ? 'my-message' : 'other-message');
+
+                let fileContentHtml = '';
+                if (message.fileBase64 && message.fileMimeType && message.fileOriginalName && message.fileType) {
+                    const dataUrl = `data:${message.fileMimeType};base64,${message.fileBase64}`;
+                    if (message.fileType === 'image') {
+                        fileContentHtml = `<img src="${dataUrl}" alt="${message.fileOriginalName}" class="message-file-preview img-fluid">`;
+                    } else if (message.fileType === 'document') {
+                        let fileIcon = 'fas fa-file';
+                        if (message.fileMimeType.includes('pdf')) fileIcon = 'fas fa-file-pdf';
+                        else if (message.fileMimeType.includes('word')) fileIcon = 'fas fa-file-word';
+                        else if (message.fileMimeType.includes('excel')) fileIcon = 'fas fa-file-excel';
+                        else if (message.fileMimeType.includes('powerpoint')) fileIcon = 'fas fa-file-powerpoint';
+
+                        fileContentHtml = `
+                            <a href="${dataUrl}" download="${message.fileOriginalName}" class="message-file-link d-block">
+                                <i class="${fileIcon}"></i>
+                                <span>${message.fileOriginalName}</span>
+                            </a>
+                        `;
+                    }
+                }
+
+                messageElement.innerHTML = `
+                    <div class="message-bubble">
+                        ${!isMyMessage ? `<div class="sender-name">${message.sender ? message.sender.name : 'Unknown'}</div>` : ''}
+                        ${message.content ? `<p class="mb-0">${message.content}</p>` : ''}
+                        ${fileContentHtml}
+                        <div class="message-time">${new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                    </div>
+                    ${(isMyMessage || isGroupAdmin) ? `
+                        <button class="btn btn-sm btn-link text-danger ms-2" onclick="confirmDeleteGroupMessage('${currentGroupChatId}', '${message._id}')" title="Delete Message">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    ` : ''}
+                `;
+                messagesDiv.appendChild(messageElement);
+            });
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function handleSendMessage() {
+            if (!currentUser || !currentGroupChatId) {
+                showToast('Please login and open a group chat to send messages.', 'info');
+                showLoginModal();
+                return;
+            }
+
+            const messageInput = document.getElementById('chatMessageInput');
+            const chatFile = document.getElementById('chatFile').files[0];
+            const content = messageInput.value.trim();
+
+            if (!content && !chatFile) {
+                showToast('Please type a message or select a file to send.', 'error');
+                return;
+            }
+
+            let fileBase64 = null;
+            let fileMimeType = null;
+            let fileOriginalName = null;
+            let fileType = null;
+
+            const sendActualMessage = async () => {
+                try {
+                    console.log('FRONTEND: Attempting to send message...');
+                    const response = await apiCall(`/groups/${currentGroupChatId}/messages`, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            content: content,
+                            fileBase64: fileBase64,
+                            fileMimeType: fileMimeType,
+                            fileOriginalName: fileOriginalName,
+                            fileType: fileType
+                        })
+                    });
+                    
+                    const groupData = await apiCall(`/groups/${currentGroupChatId}`);
+                    renderGroupMessages(groupData.group.messages, groupData.group.creator._id);
+
+                    messageInput.value = '';
+                    document.getElementById('chatFile').value = '';
+                    showToast('Message sent!', 'success');
+                    console.log('FRONTEND: Message sent successfully.');
+                } catch (error) {
+                    console.error('FRONTEND ERROR: Failed to send message:', error);
+                    showToast('Failed to send message: ' + error.message, 'error');
+                }
+            };
+
+            if (chatFile) {
+                if (chatFile.size > 10 * 1024 * 1024) {
+                    showToast('File size exceeds 10MB limit. Please upload a smaller file.', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.readAsDataURL(chatFile);
+                reader.onload = async function() {
+                    fileBase64 = reader.result.split(',')[1];
+                    fileMimeType = chatFile.type;
+                    fileOriginalName = chatFile.name;
+                    fileType = chatFile.type.startsWith('image/') ? 'image' : 'document';
+                    await sendActualMessage();
+                };
+                reader.onerror = function(error) {
+                    console.error('Error reading file for chat upload:', error);
+                    showToast('Failed to read file for upload.', 'error');
+                };
+            } else {
+                await sendActualMessage();
+            }
+        }
+
+        function confirmDeleteGroupMessage(groupId, messageId) {
+            showCustomConfirm('Are you sure you want to delete this message?', async () => {
+                try {
+                    await apiCall(`/groups/${groupId}/messages/${messageId}`, { method: 'DELETE' });
+                    showToast('Message deleted.', 'success');
+                    const groupData = await apiCall(`/groups/${groupId}`);
+                    renderGroupMessages(groupData.group.messages, groupData.group.creator._id);
+                } catch (error) {
+                    showToast('Failed to delete message: ' + error.message, 'error');
+                }
+            });
+        }
+
         async function fetchTrendingTopics() {
             const trendingTopicsDiv = document.getElementById('trendingTopics');
+            if (!trendingTopicsDiv) return; // Guard against element not existing if hidden by settings
+
             trendingTopicsDiv.innerHTML = '<div class="loading-spinner"></div>';
             try {
-                const data = await new Promise(resolve => setTimeout(() => resolve({
-                    topics: [
-                        { name: 'Machine Learning', posts: 120 },
-                        { name: 'Web Development', posts: 90 },
-                        { name: 'Competitive Programming', posts: 75 },
-                        { name: 'Data Structures', posts: 60 },
-                        { name: 'Campus Events', posts: 55 }
-                    ]
-                }), 800));
+                console.log('FRONTEND: Attempting to fetch trending topics...');
+                const data = await apiCall('/posts/trending'); 
+                const trendingTopics = data.trends;
 
                 trendingTopicsDiv.innerHTML = '';
-                data.topics.forEach(topic => {
+                if (trendingTopics.length === 0) {
+                    trendingTopicsDiv.innerHTML = '<p class="text-muted small">No trending topics available.</p>';
+                    return;
+                }
+
+                trendingTopics.forEach(topic => {
                     const topicElement = document.createElement('div');
                     topicElement.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-2');
                     topicElement.innerHTML = `
@@ -1853,7 +3059,9 @@
                     `;
                     trendingTopicsDiv.appendChild(topicElement);
                 });
+                console.log('FRONTEND: Trending topics fetched and rendered successfully.');
             } catch (error) {
+                console.error("FRONTEND ERROR: Failed to fetch trending topics:", error);
                 trendingTopicsDiv.innerHTML = '<p class="text-muted small">Could not load trending topics.</p>';
             }
         }
