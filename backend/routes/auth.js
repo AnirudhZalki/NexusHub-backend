@@ -26,15 +26,14 @@ router.post('/signup', async (req, res, next) => {
         user = new User({
             name,
             email,
-            password,
+            password, // Password will be hashed by a pre-save hook in User model
             course,
             college
         });
 
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
-
+        // The password hashing logic is usually in the User model's pre('save') hook.
+        // It's good practice to keep it there. Ensure your User.js has this.
+        // If your User.js doesn't have it, you'll need to add it, otherwise passwords won't be hashed.
         await user.save();
 
         // Create JWT
@@ -57,7 +56,8 @@ router.post('/signup', async (req, res, next) => {
             { expiresIn: '1h' }, // Token expires in 1 hour
             (err, token) => {
                 if (err) throw err;
-                res.status(201).json({ message: 'User registered successfully', token });
+                // For signup, we just confirm registration. Login is a separate step.
+                res.status(201).json({ message: 'User registered successfully. Please login to continue.', token });
             }
         );
 
@@ -79,19 +79,31 @@ router.post('/login', async (req, res, next) => {
     }
 
     try {
+        console.log(`Login attempt for email: ${email}, college: ${college}`);
         let user = await User.findOne({ email });
+
         if (!user) {
+            console.log(`Login failed: User not found for email: ${email}`);
             return res.status(400).json({ message: 'Invalid Credentials.' });
         }
+        console.log(`User found for email: ${email}. Hashed password in DB: ${user.password.substring(0, 10)}...`);
+
 
         // Check password
         const isMatch = await bcrypt.compare(password, user.password);
+        
         if (!isMatch) {
+            console.log(`Login failed: Password mismatch for email: ${email}`);
+            // If bcrypt.compare fails, it means the provided password doesn't match the hashed one.
+            // This is the most likely source of "Invalid Credentials" for new users.
             return res.status(400).json({ message: 'Invalid Credentials.' });
         }
+        console.log(`Login successful: Password matched for email: ${email}`);
+
 
         // Check college (optional, depending on your app's logic)
         if (user.college !== college) {
+            console.log(`Login failed: College mismatch for user ${email}. Provided: ${college}, DB: ${user.college}`);
             return res.status(400).json({ message: 'Invalid college selected for this user.' });
         }
 
@@ -176,7 +188,7 @@ router.put('/profile', auth, async (req, res, next) => {
         if (course) user.course = course;
         if (college) user.college = college;
 
-        await user.save();
+        await user.save(); // Save the updated user document
 
         // Return updated user data (excluding password)
         res.status(200).json({
