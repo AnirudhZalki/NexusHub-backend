@@ -1,5 +1,6 @@
 // smartbvb-backend/middleware/auth.js
 const jwt = require('jsonwebtoken');
+const CustomError = require('../utils/customError'); // Assuming CustomError is available for consistent error handling
 
 module.exports = function(req, res, next) {
     // Get token from the 'Authorization' header
@@ -9,7 +10,7 @@ module.exports = function(req, res, next) {
     // Check if Authorization header exists and starts with 'Bearer '
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         // If not, it's either no token or malformed header
-        return res.status(401).json({ message: 'No token, authorization denied. Please include a valid Bearer token.' });
+        return next(new CustomError('No token, authorization denied. Please include a valid Bearer token.', 401));
     }
 
     // Extract the token (remove 'Bearer ' prefix)
@@ -23,23 +24,31 @@ module.exports = function(req, res, next) {
         // Critical: Check if JWT_SECRET is actually defined
         if (!jwtSecret) {
             console.error('JWT_SECRET environment variable is NOT defined in auth middleware!');
-            return res.status(500).json({ message: 'Server configuration error: JWT_SECRET missing.' });
+            return next(new CustomError('Server configuration error: JWT_SECRET missing.', 500));
         }
 
         // Verify the token using the secret
         const decoded = jwt.verify(token, jwtSecret);
 
-        // Attach the decoded user payload to the request object
-        // This makes req.user available in all protected routes
-        req.user = decoded.user;
+        // --- POTENTIAL FIX AREA ---
+        // Ensure req.user is an object and its 'id' property is explicitly set from the decoded token's user ID.
+        // This ensures the type is correct for Mongoose.
+        if (decoded.user && decoded.user.id) {
+            req.user = { id: String(decoded.user.id) }; // Explicitly convert to string
+        } else {
+            console.error('JWT payload missing user ID:', decoded);
+            return next(new CustomError('Invalid token payload: User ID missing.', 401));
+        }
+        // --- END POTENTIAL FIX AREA ---
+
         next(); // Proceed to the next middleware/route handler
     } catch (err) {
         console.error('Token verification failed:', err.message);
         // Handle different JWT errors
         if (err.name === 'TokenExpiredError') {
-            return res.status(401).json({ message: 'Token expired. Please log in again.' });
+            return next(new CustomError('Token expired. Please log in again.', 401));
         }
         // For other verification failures (e.g., malformed, invalid signature)
-        res.status(401).json({ message: 'Token is not valid. Please log in again.' });
+        return next(new CustomError('Token is not valid. Please log in again.', 401));
     }
 };
