@@ -638,8 +638,9 @@
             padding: 1rem;
             background-color: var(--chat-bg-light); /* Light background for chat area */
             border-bottom: 1px solid #e9ecef;
+            /* Changed to column for top-to-bottom display */
             display: flex;
-            flex-direction: column-reverse; /* To make new messages appear at bottom */
+            flex-direction: column;
         }
         html[data-theme="dark"] #groupChatMessages {
             background-color: var(--chat-bg-dark);
@@ -2183,7 +2184,7 @@
                 postElement.innerHTML = `
                     <div class="p-4">
                         <div class="d-flex align-items-center mb-3">
-                            <div class="user-avatar me-3">${post.user ? post.user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '??'}</div>
+                            <div class="user-avatar me-3">${post.user ? post.user.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}</div>
                             <div>
                                 <h6 class="mb-0">${post.user ? post.user.name : 'Unknown User'}</h6>
                                 <small class="text-muted">${post.user ? `${post.user.course} from ${post.user.college}` : 'N/A'}</small>
@@ -2354,8 +2355,9 @@
             comments.forEach(comment => {
                 const commentElement = document.createElement('div');
                 commentElement.classList.add('comment-item');
+                // Ensure comment.user.name is used; if user is not populated, it will fall back to 'Unknown User'
                 commentElement.innerHTML = `
-                    <div class="comment-avatar">${comment.user ? comment.user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '??'}</div>
+                    <div class="comment-avatar">${comment.user ? comment.user.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}</div>
                     <div class="comment-content-wrapper">
                         <div class="comment-author">${comment.user ? comment.user.name : 'Unknown User'}</div>
                         <p class="comment-text">${comment.content}</p>
@@ -2370,6 +2372,7 @@
                     deleteButton.innerHTML = '<i class="fas fa-times-circle"></i>';
                     deleteButton.setAttribute('title', 'Delete Comment');
                     deleteButton.onclick = () => confirmDeletePostComment(postId, comment._id);
+                    // Append delete button within the comment-content-wrapper for better layout
                     commentElement.querySelector('.comment-content-wrapper').appendChild(deleteButton);
                 }
                 commentsContainer.appendChild(commentElement);
@@ -2903,6 +2906,7 @@
                 return;
             }
 
+            // Messages are rendered in the order they appear in the array (top-to-bottom)
             messages.forEach(message => {
                 const isMyMessage = currentUser && message.sender && message.sender._id === currentUser._id;
                 const isGroupAdmin = currentUser && groupCreatorId === currentUser._id;
@@ -2946,6 +2950,7 @@
                 `;
                 messagesDiv.appendChild(messageElement);
             });
+            // Scroll to bottom to show the latest message
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
@@ -2985,6 +2990,7 @@
                     });
                     
                     const groupData = await apiCall(`/groups/${currentGroupChatId}`);
+                    // Ensure messages are re-rendered after sending
                     renderGroupMessages(groupData.group.messages, groupData.group.creator._id);
 
                     messageInput.value = '';
@@ -3027,6 +3033,7 @@
                     await apiCall(`/groups/${groupId}/messages/${messageId}`, { method: 'DELETE' });
                     showToast('Message deleted.', 'success');
                     const groupData = await apiCall(`/groups/${groupId}`);
+                    // Re-render messages to reflect the deletion
                     renderGroupMessages(groupData.group.messages, groupData.group.creator._id);
                 } catch (error) {
                     showToast('Failed to delete message: ' + error.message, 'error');
