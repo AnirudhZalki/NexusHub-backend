@@ -27,6 +27,14 @@ router.post('/', auth, async (req, res) => {
             fileType
         });
 
+        // Defensive check: Filter out any non-object/null entries from the comments array
+        // This handles potential existing corrupted data before saving the document.
+        // It's applied here to prevent validation issues on initial post creation as well
+        // if for some reason a default 'comments' array in the schema might trigger it,
+        // although it's more common on updates.
+        newPost.comments = (newPost.comments || []).filter(c => typeof c === 'object' && c !== null);
+
+
         const post = await newPost.save();
 
         // Increment user's postCount
@@ -39,7 +47,11 @@ router.post('/', auth, async (req, res) => {
         res.status(201).json({ message: 'Post created successfully', post: populatedPost });
 
     } catch (err) {
-        console.error(err.message);
+        console.error('Error creating post:', err.message); // Log the specific error message
+        if (err.name === 'ValidationError') {
+            // Mongoose validation error (e.g., missing required field, type mismatch)
+            return res.status(400).json({ message: err.message, errors: err.errors });
+        }
         res.status(500).send('Server Error');
     }
 });
